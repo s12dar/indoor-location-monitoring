@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Localization Serdar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <!--REGISTRATION PROCESS-->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tv_join_us">Settings</string>
+    <string name="tv_welcome_back">Welcome back</string>
+    <string name="tv_join_us_description">Navigate Equipments Indoor</string>
+    <string name="hint_name">Name</string>
+    <string name="hint_surname">Surname</string>
+    <string name="hint_phone_number">Phone number</string>
+    <string name="hint_email">Email address</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_create_account">Create Account</string>
+    <string name="btn_sign_in">Sign in</string>
+    <string name="tv_have_an_account">Already have an account?</string>
+    <string name="tv_no_account_yet">Don\'t have an account yet?</string>
+    <string name="tv_sign_in">Sign in</string>
+    <string name="error_email">Oop, we need your email address</string>
+    <string name="error_name">Oop, what\'s your name?</string>
+    <string name="error_surname">Oops, what\'s your family name?</string>
+    <string name="error_phone_number">Oops, what\'s your phone number?</string>
+    <string name="error_password">Oop, please set a password</string>
+
+    <!--DRAWER NAVIGATION-->
+    <string name="drawer_controller_open">open</string>
+    <string name="drawer_controller_close">close</string>
+    <string name="tv_morning">Good morning,</string>
+    <string name="tv_afternoon">Good afternoon,</string>
+    <string name="tv_evening">Good evening,</string>
+    <string name="tv_night">Good night,</string>
+
+    <!--PROFILE-->
+    <string name="txt_contact_info">Contact info</string>
+</resources>

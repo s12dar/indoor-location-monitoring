@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:background="#F8F8FF"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".settings.Settings">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="6dp"
+        app:cardForegroundColor="#00FFFFFF"
+        app:cardMaxElevation="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.google.android.material.card.MaterialCardView>
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_contact_info"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:text="@string/txt_contact_info"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        />-->
+    <TextView
+        android:id="@+id/tv_phone_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="+40730780128"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
