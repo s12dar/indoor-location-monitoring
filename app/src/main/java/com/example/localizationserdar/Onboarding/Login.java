@@ -1,27 +1,21 @@
 package com.example.localizationserdar.Onboarding;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.LoginBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.localizationserdar.utils.OnboardingUtils;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.concurrent.Executor;
 
 public class Login extends Fragment {
 
@@ -56,6 +50,7 @@ public class Login extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((OnboardingUtils) requireActivity()).hideToolbar();
 
         binding.btnSignIn.setOnClickListener(v -> {
 

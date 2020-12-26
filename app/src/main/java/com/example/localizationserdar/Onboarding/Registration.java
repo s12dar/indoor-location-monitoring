@@ -17,6 +17,7 @@ import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.RegistrationBinding;
 import com.example.localizationserdar.datamanager.DataManager;
 import com.example.localizationserdar.datamodels.User;
+import com.example.localizationserdar.utils.OnboardingUtils;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -59,6 +60,7 @@ public class Registration extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        ((OnboardingUtils)requireActivity()).hideToolbar();
 
         if (currentUser != null) {
             Navigation.findNavController(view).navigate(R.id.action_registration_to_mainMenu);

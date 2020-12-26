@@ -3,21 +3,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
-    android:background="#F8F8FF"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".settings.Settings">
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:cardCornerRadius="8dp"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        app:cardCornerRadius="4dp"
+        android:layout_margin="16dp"
         app:cardElevation="6dp"
         app:cardForegroundColor="#00FFFFFF"
         app:cardMaxElevation="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_profile_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:textColor="@color/colorDinner"
+            android:textSize="@dimen/eighteen"
+            android:fontFamily="@font/poppins_medium"
+            android:text="@string/txt_profile_details"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_name_surname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/colorDinner"
+            android:fontFamily="@font/poppins_regular"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_profile_details"
+            tools:text="Serdar Parahatgeldiyev" />
+
+            <TextView
+                android:id="@+id/tv_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/colorDinner"
+                android:fontFamily="@font/poppins_regular"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_name_surname"
+                tools:text="parahatgeldiyew.s@gmail.com" />
+
+            <TextView
+                android:id="@+id/tv_phone_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="@color/colorDinner"
+                app:layout_constraintTop_toBottomOf="@+id/tv_email"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="+40730780128"/>
+
+            <Button
+                android:id="@+id/textButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_edit"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_profile_details"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_profile_details"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -27,15 +94,7 @@
 <!--        android:text="@string/txt_contact_info"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        />-->
-    <TextView
-        android:id="@+id/tv_phone_number"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_regular"
-        android:textColor="@color/colorBlack"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="+40730780128"/>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 
 import com.example.localizationserdar.databinding.MainMenuBinding;
 import com.example.localizationserdar.datamodels.User;
+import com.example.localizationserdar.utils.OnboardingUtils;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Calendar;
@@ -57,8 +58,11 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        navigationView = getView().findViewById(R.id.nav_view);
+        navigationView = requireView().findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        ((OnboardingUtils) requireActivity()).hideToolbar();
+
 
 //        user = LocalizationLevel.getInstance().currentUser;
         //Setting Nav Drawer

@@ -1,10 +1,29 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorDinner</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- TOOLBAR -->
+    <style name="Toolbar.Material" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:popupElevation" tools:targetApi="lollipop">0dp</item>
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">textStart</item>
+        <item name="titleTextColor">@color/colorAccent</item>
+        <item name="titleTextAppearance">@style/Toolbar.Title</item>
+    </style>
+
+    <!--TOOLBAR TEXT-->
+    <style name="Toolbar.Title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

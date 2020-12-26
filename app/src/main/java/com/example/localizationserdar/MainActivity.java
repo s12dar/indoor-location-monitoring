@@ -1,16 +1,38 @@
 package com.example.localizationserdar;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.TypefaceCompatUtil;
-
-import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.localizationserdar.databinding.ActivityMainBinding;
+import com.example.localizationserdar.utils.OnboardingUtils;
+
+public class MainActivity extends AppCompatActivity implements OnboardingUtils {
+
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
+    }
+
+    @Override
+    public void showToolbar() {
+        binding.toolbar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideToolbar() {
+        binding.toolbar.setVisibility(View.GONE);
     }
 }

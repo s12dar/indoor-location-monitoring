@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="twenty_four">24sp</dimen>
-    <dimen name="size_generic">8dp</dimen>
+    <dimen name="size_generic">8sp</dimen>
+    <dimen name="eighteen">18sp</dimen>
+    <dimen name="twenty">20sp</dimen>
 </resources>
