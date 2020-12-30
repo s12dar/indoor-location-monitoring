@@ -69,7 +69,15 @@
         android:id="@+id/settings"
         android:name="com.example.localizationserdar.settings.Settings"
         android:label="settings"
-        tools:layout="@layout/settings" />
+        tools:layout="@layout/settings" >
+        <action
+            android:id="@+id/action_settings_to_mainMenu"
+            app:destination="@id/mainMenu"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
     <fragment
         android:id="@+id/splash"
         android:name="com.example.localizationserdar.Onboarding.Splash"

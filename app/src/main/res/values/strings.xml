@@ -37,6 +37,7 @@
     <!--SETTINGS-->
     <string name="txt_profile_details">Profile details</string>
     <string name="btn_edit">EDIT</string>
+    <string name="btn_save">SAVE</string>
 
     <!--SPLASH-->
     <string name="txt_splash">SPLASH</string>

@@ -24,7 +24,7 @@
                 android:id="@+id/toolbar"
                 app:navigationIcon="@drawable/ic_arrow_back_24"
                 style="@style/Toolbar.Material"
-                tools:title="Back" />
+                app:title="" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

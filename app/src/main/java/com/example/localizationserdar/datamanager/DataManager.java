@@ -86,4 +86,21 @@ public class DataManager implements DataManagerInterface {
             });
         }
     }
+
+    @Override
+    public void updateUser(User user, DataListener<Boolean> listener) {
+        WriteBatch updateUserDetails = FirebaseFirestore.getInstance().batch();
+        DocumentReference userDocRef = FirebaseFirestore.getInstance().collection(COLLECTION_USERS).document(user.userId);
+
+        updateUserDetails.update(userDocRef, user.toMap());
+
+        updateUserDetails.commit().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                listener.onData(true, null);
+            } else {
+                listener.onData(false, task.getException());
+            }
+        });
+    }
+
 }

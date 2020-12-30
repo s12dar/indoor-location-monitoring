@@ -6,4 +6,5 @@ public interface DataManagerInterface {
 
     void createUser(User user, DataListener<Boolean> listener);
     void getCurrentUser(DataListener<User> listener);
+    void updateUser(User user, DataListener<Boolean> listener);
 }
