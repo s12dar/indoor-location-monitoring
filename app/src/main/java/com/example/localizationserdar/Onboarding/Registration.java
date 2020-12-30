@@ -62,9 +62,9 @@ public class Registration extends Fragment {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         ((OnboardingUtils)requireActivity()).hideToolbar();
 
-        if (currentUser != null) {
-            Navigation.findNavController(view).navigate(R.id.action_registration_to_mainMenu);
-        }
+//        if (currentUser != null) {
+//            Navigation.findNavController(view).navigate(R.id.action_registration_to_mainMenu);
+//        }
 
         binding.btnCreateAccount.setOnClickListener(v -> {
 
@@ -108,13 +108,20 @@ public class Registration extends Fragment {
                     if (task.isSuccessful()) {
                         //Load data to firestore
                         User user;
+                        if (LocalizationLevel.getInstance().currentUser == null) {
+
                             user = new User();
-                            user.userId = firebaseUser.getUid();
+                            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                                user.userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            }
                             user.firstName = firstName;
                             user.lastName = lastName;
                             user.phoneNumber = phoneNumber;
                             user.email = email;
                             user.createdAt = new Timestamp(new Date());
+                        } else {
+                            user = LocalizationLevel.getInstance().currentUser;
+                        }
 
                         Log.d("The user info is here", user.userId+ user.firstName+user.lastName+ user.email+user.phoneNumber);
 
@@ -122,6 +129,8 @@ public class Registration extends Fragment {
                             if (success != null && success) {
                                 try {
                                     LocalizationLevel.getInstance().currentUser = user;
+                                    Log.d(TAG, "All is good" + LocalizationLevel.getInstance().currentUser.firstName);
+
                                 } catch (NullPointerException e) {
                                     Log.d("The error is me: ",e+"");
                                 }
@@ -133,7 +142,6 @@ public class Registration extends Fragment {
 //                        if (LocalizationLevel.getInstance().currentUser == null) {
 //                            LocalizationLevel.getInstance().currentUser = user;
 //                        }
-
                         Navigation.findNavController(requireView()).navigate(R.id.action_registration_to_mainMenu);
                     } else {
                         Toast.makeText(getActivity(), "Registration is failed", Toast.LENGTH_SHORT).show();

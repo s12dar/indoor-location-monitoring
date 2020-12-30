@@ -41,4 +41,8 @@ public class User {
         return map;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
 }

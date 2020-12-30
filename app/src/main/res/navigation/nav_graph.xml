@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/registration">
+    app:startDestination="@id/splash">
 
     <fragment
         android:id="@+id/registration"
@@ -37,6 +37,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_mainMenu_to_login"
+            app:destination="@id/login"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/login"
@@ -63,4 +70,20 @@
         android:name="com.example.localizationserdar.settings.Settings"
         android:label="settings"
         tools:layout="@layout/settings" />
+    <fragment
+        android:id="@+id/splash"
+        android:name="com.example.localizationserdar.Onboarding.Splash"
+        android:label="splash"
+        tools:layout="@layout/splash" >
+        <action
+            android:id="@+id/action_splash_to_registration"
+            app:destination="@id/registration"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_in" />
+        <action
+            android:id="@+id/action_splash_to_mainMenu"
+            app:destination="@id/mainMenu" />
+    </fragment>
 </navigation>

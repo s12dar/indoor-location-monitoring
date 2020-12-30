@@ -18,18 +18,26 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.localizationserdar.databinding.MainMenuBinding;
+import com.example.localizationserdar.datamanager.DataManager;
 import com.example.localizationserdar.datamodels.User;
 import com.example.localizationserdar.utils.OnboardingUtils;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
+
+import static com.example.localizationserdar.utils.Constants.EMPTY_STRING;
+import static com.example.localizationserdar.utils.Constants.EXISTING_USER;
+import static com.example.localizationserdar.utils.Constants.USER_STATUS;
 
 public class MainMenu extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
 
     private MainMenuBinding binding;
     private NavigationView navigationView;
+
+    User user;
+
     private static final String TAG = "DEBUGGING...";
-    private User user;
 
     public MainMenu() {
         // Required empty public constructor
@@ -52,26 +60,38 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         // Inflate the layout for this fragment
 //        setNavigationViewListener();
         binding = MainMenuBinding.inflate(inflater, container, false);
+        ((OnboardingUtils) requireActivity()).hideToolbar();
+
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if(getArguments() != null && getArguments().getString(USER_STATUS, EMPTY_STRING).equals(EXISTING_USER)) {
+            Log.d("Hello, Serdar, ", "How are you?");
+            DataManager.getInstance().getCurrentUser(
+                    (user, exception) -> {
+                        if (user != null) {
+                            LocalizationLevel.getInstance().currentUser = user;
+                        }
+                    });
+        }
+
         navigationView = requireView().findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ((OnboardingUtils) requireActivity()).hideToolbar();
-
-
-//        user = LocalizationLevel.getInstance().currentUser;
-        //Setting Nav Drawer
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         setNavDrawer(toolbar);
 
         //Setting the Greetings message
         setGreetingsText();
-
     }
 
     private void setNavDrawer(Toolbar toolbar) {
@@ -83,12 +103,12 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     }
 
     private void setGreetingsText() {
-//        User user = LocalizationLevel.getInstance().currentUser;
-
         View header = binding.navView.getHeaderView(0);
         TextView tvGreetings = header.findViewById(R.id.tv_morning);
         TextView tvName  = header.findViewById(R.id.tv_name);
-//        tvName.setText(user.firstName);
+
+        user = LocalizationLevel.getInstance().currentUser;
+        tvName.setText(user.firstName);
 
         Calendar rightNow = Calendar.getInstance();
         int timeOfDay = rightNow.get(Calendar.HOUR_OF_DAY);
@@ -104,11 +124,16 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         }
     }
 
+    private void signOut() {
+        FirebaseAuth.getInstance().signOut();
+        Navigation.findNavController(requireView()).navigate(R.id.action_mainMenu_to_login);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.menu_settings:
+            case R.id.menu_profile:
                 Navigation.findNavController(requireView()).navigate(R.id.action_mainMenu_to_settings);
                 Log.d("Hello," ,"You pressed me!");
                 break;
@@ -120,6 +145,10 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 //Logic here
                 Log.d(TAG, "Hey, you pressed Logout menu");
                 break;
+            case R.id.menu_logout:
+                signOut();
+                break;
+
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;

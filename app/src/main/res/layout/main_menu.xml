@@ -14,6 +14,7 @@
         layout="@layout/toolbar"/>
 
     <com.google.android.material.navigation.NavigationView
+        app:itemTextAppearance="@style/nav_drawer_font"
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

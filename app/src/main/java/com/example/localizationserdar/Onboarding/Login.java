@@ -12,10 +12,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.localizationserdar.LocalizationLevel;
 import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.LoginBinding;
+import com.example.localizationserdar.datamanager.DataManager;
 import com.example.localizationserdar.utils.OnboardingUtils;
 import com.google.firebase.auth.FirebaseAuth;
+
+import static com.example.localizationserdar.utils.Constants.EXISTING_USER;
+import static com.example.localizationserdar.utils.Constants.USER_STATUS;
 
 public class Login extends Fragment {
 
@@ -44,6 +49,7 @@ public class Login extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = LoginBinding.inflate(inflater, container, false);
+
         return binding.getRoot();
     }
 
@@ -77,7 +83,16 @@ public class Login extends Fragment {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
-                        Navigation.findNavController(requireView()).navigate(R.id.action_login_to_mainMenu);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(USER_STATUS, EXISTING_USER);
+                        Navigation.findNavController(requireView()).navigate(R.id.action_login_to_mainMenu, bundle);
+                        DataManager.getInstance().getCurrentUser(
+                                (user, exception) -> {
+                                    if (user != null) {
+                                        LocalizationLevel.getInstance().currentUser = user;
+                                    }
+                                }
+                        );
                     }
                     else {
                         Toast.makeText(getActivity(), "Error! "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();

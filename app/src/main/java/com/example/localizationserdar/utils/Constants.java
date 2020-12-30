@@ -17,7 +17,10 @@ public class Constants {
      */
     public static final String COLLECTION_USERS = "Users";
 
-    private Constants() {
-        throw new AssertionError();
-    }
+    /**
+     * FOR BUNDLE
+     */
+    public static final String EXISTING_USER = "existingUser";
+    public static final String USER_STATUS = "userStatus";
+    public static final String EMPTY_STRING = "";
 }

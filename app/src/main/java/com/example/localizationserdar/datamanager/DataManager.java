@@ -5,7 +5,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 
 import static com.example.localizationserdar.utils.Constants.COLLECTION_USERS;
@@ -46,5 +48,42 @@ public class DataManager implements DataManagerInterface {
             }
         });
 
+    }
+
+    @Override
+    public void getCurrentUser(DataListener<User> listener) {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser == null) {
+            listener.onData(null, new FirebaseAuthInvalidUserException(AUTHENTICATION, INVALID_USER));
+        } else {
+            DocumentReference userDocRef = FirebaseFirestore.getInstance().collection(COLLECTION_USERS).document(firebaseUser.getUid());
+
+            FirebaseFirestore.getInstance().runTransaction(transaction -> {
+                DocumentSnapshot userDoc = transaction.get(userDocRef);
+
+                User currentUser = userDoc.toObject(User.class);
+                if (currentUser != null) {
+                    if (!currentUser.email.equals(firebaseUser.getEmail())) {
+                        currentUser.email = firebaseUser.getEmail();
+                    }
+
+                    if (currentUser.email == null || currentUser.email.isEmpty()) {
+                        currentUser.email = firebaseUser.getEmail();
+                    }
+
+                    transaction.set(userDocRef, currentUser.toMap(), SetOptions.merge());
+                    return currentUser;
+                } else {
+                    return null;
+                }
+            }).addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    User currentUser = task.getResult();
+                    listener.onData(currentUser, null);
+                } else {
+                    listener.onData(null, task.getException());
+                }
+            });
+        }
     }
 }

@@ -26,4 +26,9 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <!--NAV DRAWER-->
+    <style name="nav_drawer_font">
+        <item name="fontFamily">@font/poppins_regular</item>
+    </style>
 </resources>

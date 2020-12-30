@@ -2,15 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/menu_settings"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/tv_join_us"/>
+        <item android:id="@+id/menu_profile"
+            android:icon="@drawable/ic_profile_24"
+            android:title="@string/menu_profile"/>
         <item android:id="@+id/menu_localization"
             android:icon="@drawable/ic_menu"
             android:title="@string/tv_join_us"/>
         <item android:id="@+id/menu_language"
             android:icon="@drawable/ic_menu"
-            android:title="@string/tv_join_us"/>
+
+        android:title="@string/tv_join_us"/>
     </group>
+
+    <item android:title="@string/menu_settings">
+        <menu>
+            <group android:id="@id/settings"
+                android:checkableBehavior="single">
+                <item android:id="@+id/menu_terms"
+                    android:title="@string/menu_terms_and_privacy"/>
+                <item android:id="@+id/menu_logout"
+                    android:title="@string/menu_logout"/>
+            </group>
+        </menu>
+    </item>
 
 </menu>
