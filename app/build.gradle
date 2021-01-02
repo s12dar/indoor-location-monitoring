@@ -56,5 +56,8 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
+    // round Image View lib
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
 
 }

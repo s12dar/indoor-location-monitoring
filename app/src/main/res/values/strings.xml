@@ -46,5 +46,6 @@
     <string name="menu_profile">Profile</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_logout">Log out</string>
+    <string name="menu_localization">Localizations</string>
     <string name="menu_terms_and_privacy">Terms and Conditions / Privacy</string>
 </resources>
