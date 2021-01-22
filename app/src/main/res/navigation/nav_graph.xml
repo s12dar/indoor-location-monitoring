@@ -44,6 +44,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_mainMenu_to_localizationOverview"
+            app:destination="@id/localizationOverview"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/login"
@@ -92,6 +99,15 @@
             app:popExitAnim="@android:anim/fade_in" />
         <action
             android:id="@+id/action_splash_to_mainMenu"
-            app:destination="@id/mainMenu" />
+            app:destination="@id/mainMenu"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
+    <fragment
+        android:id="@+id/localizationOverview"
+        android:name="com.example.localizationserdar.localization.LocalizationOverview"
+        android:label="localization_overview"
+        tools:layout="@layout/localization_overview" />
 </navigation>

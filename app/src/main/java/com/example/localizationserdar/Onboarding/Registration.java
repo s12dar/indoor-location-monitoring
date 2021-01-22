@@ -24,6 +24,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Date;
 
+import static com.example.localizationserdar.utils.Constants.NEW_USER;
+import static com.example.localizationserdar.utils.Constants.STATUS_PENDING;
+import static com.example.localizationserdar.utils.Constants.USER_STATUS;
+
 
 public class Registration extends Fragment {
 
@@ -102,6 +106,7 @@ public class Registration extends Fragment {
 
     private void createAccount(String email, String password, String firstName, String lastName, String phoneNumber) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         binding.progressBar.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
@@ -119,13 +124,14 @@ public class Registration extends Fragment {
                             user.phoneNumber = phoneNumber;
                             user.email = email;
                             user.createdAt = new Timestamp(new Date());
+                            user.verificationStatus = STATUS_PENDING;
                         } else {
                             user = LocalizationLevel.getInstance().currentUser;
                         }
 
                         Log.d("The user info is here", user.userId+ user.firstName+user.lastName+ user.email+user.phoneNumber);
 
-                        DataManager.getInstance().createUser(user, (success, exception) ->{
+                        DataManager.getInstance().createUser(user, (success, exception) -> {
                             if (success != null && success) {
                                 try {
                                     LocalizationLevel.getInstance().currentUser = user;
@@ -142,6 +148,8 @@ public class Registration extends Fragment {
 //                        if (LocalizationLevel.getInstance().currentUser == null) {
 //                            LocalizationLevel.getInstance().currentUser = user;
 //                        }
+                        Bundle bundle = new Bundle();
+                        bundle.putString(USER_STATUS, NEW_USER);
                         Navigation.findNavController(requireView()).navigate(R.id.action_registration_to_mainMenu);
                     } else {
                         Toast.makeText(getActivity(), "Registration is failed", Toast.LENGTH_SHORT).show();

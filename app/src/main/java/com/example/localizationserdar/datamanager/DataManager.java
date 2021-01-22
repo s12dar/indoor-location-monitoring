@@ -1,5 +1,6 @@
 package com.example.localizationserdar.datamanager;
 
+import com.example.localizationserdar.datamodels.Beacon;
 import com.example.localizationserdar.datamodels.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
@@ -7,9 +8,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import static com.example.localizationserdar.utils.Constants.COLLECTION_BEACONS;
 import static com.example.localizationserdar.utils.Constants.COLLECTION_USERS;
 
 public class DataManager implements DataManagerInterface {
@@ -47,7 +54,6 @@ public class DataManager implements DataManagerInterface {
                 listener.onData(false, task.getException());
             }
         });
-
     }
 
     @Override
@@ -87,6 +93,8 @@ public class DataManager implements DataManagerInterface {
         }
     }
 
+
+
     @Override
     public void updateUser(User user, DataListener<Boolean> listener) {
         WriteBatch updateUserDetails = FirebaseFirestore.getInstance().batch();
@@ -102,5 +110,35 @@ public class DataManager implements DataManagerInterface {
             }
         });
     }
+
+    @Override
+    public void getBeacons(DataListener<List<Beacon>> listener) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null) {
+            listener.onData(null, new FirebaseAuthInvalidUserException(AUTHENTICATION, INVALID_USER));
+        } else {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection(COLLECTION_BEACONS)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            List<Beacon> beacons = new LinkedList<>();
+                            if (querySnapshot == null || querySnapshot.isEmpty()) {
+                                listener.onData(null, null);
+                                return;
+                            }
+                            for (QueryDocumentSnapshot document: querySnapshot) {
+                                beacons.add(document.toObject(Beacon.class));
+                            }
+                            listener.onData(beacons, null);
+                        } else {
+                            listener.onData(null, task.getException());
+                        }
+                    });
+        }
+    }
+
 
 }

@@ -13,6 +13,7 @@ import static com.example.localizationserdar.utils.Constants.FIRST_NAME;
 import static com.example.localizationserdar.utils.Constants.LAST_NAME;
 import static com.example.localizationserdar.utils.Constants.PHONE_NUMBER;
 import static com.example.localizationserdar.utils.Constants.UID;
+import static com.example.localizationserdar.utils.Constants.VERIFICATION_STATUS;
 
 public class User {
 
@@ -28,6 +29,8 @@ public class User {
     public String userId;
     @PropertyName(CREATED_AT)
     public Timestamp createdAt;
+    @PropertyName(VERIFICATION_STATUS)
+    public String verificationStatus;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
@@ -37,6 +40,7 @@ public class User {
         map.put(PHONE_NUMBER, phoneNumber);
         map.put(CREATED_AT, createdAt);
         map.put(UID, userId);
+        map.put(VERIFICATION_STATUS, verificationStatus);
 
         return map;
     }

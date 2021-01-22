@@ -18,6 +18,7 @@
         android:layout_height="wrap_content">
         
         <include
+            android:id="@+id/bottom_sheet"
             layout="@layout/bottom_sheet"/>
         
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -31,7 +32,7 @@
         app:headerLayout="@layout/header_drawer"
         app:menu="@menu/drawer_navigation" />
 
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="match_parent"-->
 <!--        android:layout_margin="32dp">-->

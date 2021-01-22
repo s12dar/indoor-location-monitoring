@@ -3,6 +3,8 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="fontFamily">@font/poppins_regular</item>
+        <item name="android:textColor">@color/colorDinner</item>
         <item name="colorPrimaryDark">@color/colorDinner</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>

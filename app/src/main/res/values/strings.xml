@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Localization Serdar</string>
+    <string name="app_name"></string>
     <!-- TODO: Remove or change this placeholder text -->
 
     <!--REGISTRATION PROCESS-->
@@ -48,4 +48,14 @@
     <string name="menu_logout">Log out</string>
     <string name="menu_localization">Localizations</string>
     <string name="menu_terms_and_privacy">Terms and Conditions / Privacy</string>
+
+    <!--BOTTOM SHEET-->
+    <string name="txt_nice_to_see_you">Nice to see you again</string>
+    <string name="txt_what_you_looking">What are you looking for?</string>
+
+    <!--Verification status overlay-->
+    <string name="txt_okay_i_understand">OK, I understand</string>
+    <string name="txt_moderation_status">Moderation status</string>
+    <string name="txt_moderation_status_content">Hello. Currently we are investigating your profile.\n\nWe will give you an access to use the platform if you are student at University Politehnica of Bucharest.</string>
+    <string name="txt_thank_you">Thank you for your patience!</string>
 </resources>
