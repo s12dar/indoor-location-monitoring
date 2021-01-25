@@ -3,14 +3,14 @@
 
     <group android:checkableBehavior="single">
         <item android:id="@+id/menu_profile"
-            android:icon="@drawable/ic_profile_24"
+            android:icon="@drawable/ic_profile"
             android:title="@string/menu_profile"/>
         <item android:id="@+id/menu_localization"
             android:icon="@drawable/ic_local"
             android:title="@string/menu_localization"/>
         <item android:id="@+id/menu_language"
-            android:icon="@drawable/ic_menu"
-            android:title="@string/tv_join_us"/>
+            android:icon="@drawable/ic_gift"
+            android:title="@string/menu_rewards"/>
     </group>
 
     <item android:title="@string/menu_settings">

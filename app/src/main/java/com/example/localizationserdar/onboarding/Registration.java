@@ -1,4 +1,4 @@
-package com.example.localizationserdar.Onboarding;
+package com.example.localizationserdar.onboarding;
 
 import android.os.Bundle;
 import android.util.Log;

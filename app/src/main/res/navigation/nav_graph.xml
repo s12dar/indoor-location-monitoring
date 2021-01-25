@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/registration"
-        android:name="com.example.localizationserdar.Onboarding.Registration"
+        android:name="com.example.localizationserdar.onboarding.Registration"
         android:label="registration"
         tools:layout="@layout/registration" >
         <action
@@ -51,10 +51,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_mainMenu_to_rewards"
+            app:destination="@id/rewards" />
     </fragment>
     <fragment
         android:id="@+id/login"
-        android:name="com.example.localizationserdar.Onboarding.Login"
+        android:name="com.example.localizationserdar.onboarding.Login"
         android:label="login"
         tools:layout="@layout/login" >
         <action
@@ -87,7 +90,7 @@
     </fragment>
     <fragment
         android:id="@+id/splash"
-        android:name="com.example.localizationserdar.Onboarding.Splash"
+        android:name="com.example.localizationserdar.onboarding.Splash"
         android:label="splash"
         tools:layout="@layout/splash" >
         <action
@@ -110,4 +113,9 @@
         android:name="com.example.localizationserdar.localization.LocalizationOverview"
         android:label="localization_overview"
         tools:layout="@layout/localization_overview" />
+    <fragment
+        android:id="@+id/rewards"
+        android:name="com.example.localizationserdar.rewards.Rewards"
+        android:label="rewards"
+        tools:layout="@layout/rewards" />
 </navigation>
