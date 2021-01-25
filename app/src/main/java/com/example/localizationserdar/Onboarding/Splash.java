@@ -15,6 +15,8 @@ import com.example.localizationserdar.datamanager.DataManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.LinkedList;
+
 public class Splash extends Fragment {
 
     SplashBinding binding;
@@ -55,6 +57,13 @@ public class Splash extends Fragment {
                     if (user != null) {
                         LocalizationLevel.getInstance().currentUser = user;
                     }
+                    DataManager.getInstance().getBeacons((beacons, exception1) -> {
+                        if (beacons != null) {
+                            LocalizationLevel.getInstance().allBeacons = beacons;
+                        } else {
+                            LocalizationLevel.getInstance().allBeacons = new LinkedList<>();
+                        }
+                    });
                     goToNextScreen();
                 });
     }

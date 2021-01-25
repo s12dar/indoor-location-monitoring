@@ -6,5 +6,6 @@
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFF</color>
     <color name="colorDinner">#0d0c0a</color>
+    <color name="colorWhiteSmoke">#F5F5F5</color>
 
 </resources>

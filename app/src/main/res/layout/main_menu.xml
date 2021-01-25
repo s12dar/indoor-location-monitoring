@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
+    android:background="@color/colorWhiteSmoke"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainMenu">
+    tools:context=".mainmenu.MainMenu">
 
     <include
         android:id="@+id/toolbar"

@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/mainMenu"
-        android:name="com.example.localizationserdar.MainMenu"
+        android:name="com.example.localizationserdar.mainmenu.MainMenu"
         android:label="main_menu"
         tools:layout="@layout/main_menu" >
         <action

@@ -58,4 +58,8 @@
     <string name="txt_moderation_status">Moderation status</string>
     <string name="txt_moderation_status_content">Hello. Currently we are investigating your profile.\n\nWe will give you an access to use the platform if you are student at University Politehnica of Bucharest.</string>
     <string name="txt_thank_you">Thank you for your patience!</string>
+
+    <!--SEARCH WIDGET-->
+    <string name="hint_search">Search Xerox, coffee machine…</string>
+    <string name="app_label">Localization</string>
 </resources>

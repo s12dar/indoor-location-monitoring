@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -56,6 +57,19 @@ public class LocalizationOverview extends Fragment {
         LocalizationAdapter localizationAdapter = new LocalizationAdapter(getActivity(), LocalizationLevel.getInstance().allBeacons);
 
         binding.recyclerView.setAdapter(localizationAdapter);
+
+        binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                localizationAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
 
     }
 }

@@ -1,4 +1,4 @@
-package com.example.localizationserdar;
+package com.example.localizationserdar.mainmenu;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -13,16 +13,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.localizationserdar.LocalizationLevel;
+import com.example.localizationserdar.R;
+import com.example.localizationserdar.databinding.BottomSheetBinding;
 import com.example.localizationserdar.databinding.MainMenuBinding;
 import com.example.localizationserdar.datamanager.DataManager;
 import com.example.localizationserdar.datamodels.User;
+import com.example.localizationserdar.localization.LocalizationAdapter;
 import com.example.localizationserdar.utils.OnboardingUtils;
 import com.github.florent37.tutoshowcase.TutoShowcase;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,6 +51,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
     private MainMenuBinding binding;
     private ListenerRegistration modStatusListener;
+    private BottomSheetBinding bottomSheetBinding;
 
     User user;
 
@@ -93,14 +101,6 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        DataManager.getInstance().getBeacons((beacons, exception) -> {
-            if (beacons != null) {
-                LocalizationLevel.getInstance().allBeacons = beacons;
-            } else {
-                LocalizationLevel.getInstance().allBeacons = new LinkedList<>();
-            }
-        });
-
         if (getArguments() != null && getArguments().getString(USER_STATUS, EMPTY_STRING).equals(EXISTING_USER)) {
             Log.d("Hello, Serdar, ", "How are you?");
             DataManager.getInstance().getCurrentUser(
@@ -124,8 +124,49 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
         //Display moderation overlay (in case pending/declined)
         manageModerationStatus();
-    }
 
+        //Recycler view set up for search
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        binding.bottomSheet.rvBottomSheet.setLayoutManager(linearLayoutManager);
+
+        if (LocalizationLevel.getInstance().allBeacons == null) {
+            LocalizationLevel.getInstance().allBeacons = new LinkedList<>();
+        }
+
+        LocalizationAdapter localizationAdapter = new LocalizationAdapter(getActivity(), LocalizationLevel.getInstance().allBeacons);
+        binding.bottomSheet.rvBottomSheet.setAdapter(localizationAdapter);
+
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(binding.bottomSheet.bSh);
+        behavior.setHideable(false);
+        behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
+
+        //Set the search
+        binding.bottomSheet.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                localizationAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+
+
+    }
     private void setNavDrawer(Toolbar toolbar) {
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), binding.drawerLayout, toolbar, R.string.drawer_controller_open, R.string.drawer_controller_close);
