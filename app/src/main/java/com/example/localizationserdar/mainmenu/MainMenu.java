@@ -151,6 +151,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         });
 
         //Set the search
+        assert binding.bottomSheet.svSearch != null;
         binding.bottomSheet.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -163,6 +164,9 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 return false;
             }
         });
+
+        assert binding.bottomSheet.fabScan != null;
+        binding.bottomSheet.fabScan.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_mainMenu_to_qrScanner));
 
 
 
@@ -254,9 +258,8 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 Navigation.findNavController(requireView()).navigate(R.id.action_mainMenu_to_localizationOverview);
                 Log.d(TAG, "Hello, you pressed Localization menu");
                 break;
-            case R.id.menu_language:
-                //Logic here
-                Log.d(TAG, "Hey, you pressed Logout menu");
+            case R.id.menu_reward:
+                Navigation.findNavController(requireView()).navigate(R.id.action_mainMenu_to_rewards);
                 break;
             case R.id.menu_logout:
                 signOut();

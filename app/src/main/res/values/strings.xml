@@ -63,4 +63,8 @@
     <!--SEARCH WIDGET-->
     <string name="hint_search">Search Xerox, coffee machine…</string>
     <string name="app_label">Localization</string>
+
+    <!--REWARD MENU-->
+    <string name="txt_reward">Reward</string>
+    <string name="btn_lets_get_started">Let\'s get started</string>
 </resources>

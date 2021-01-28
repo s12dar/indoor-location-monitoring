@@ -8,7 +8,7 @@
         <item android:id="@+id/menu_localization"
             android:icon="@drawable/ic_local"
             android:title="@string/menu_localization"/>
-        <item android:id="@+id/menu_language"
+        <item android:id="@+id/menu_reward"
             android:icon="@drawable/ic_gift"
             android:title="@string/menu_rewards"/>
     </group>

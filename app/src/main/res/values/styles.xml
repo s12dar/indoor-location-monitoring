@@ -34,6 +34,10 @@
         <item name="fontFamily">@font/poppins_regular</item>
     </style>
 
+    <style name="fab_style">
+        <item name="android:color">@color/colorDinner</item>
+    </style>
+
     <!--BOTTOM SHEET-->
     <style name="BottomSheetTheme" parent="Theme.Design.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
