@@ -16,7 +16,9 @@
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_registration_to_login"
             app:destination="@id/login"
@@ -43,7 +45,9 @@
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_mainMenu_to_localizationOverview"
             app:destination="@id/localizationOverview"
@@ -77,7 +81,9 @@
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_login_to_registration"
             app:destination="@id/registration"

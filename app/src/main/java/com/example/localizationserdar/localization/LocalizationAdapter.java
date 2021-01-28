@@ -1,5 +1,6 @@
 package com.example.localizationserdar.localization;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,6 +107,28 @@ public class LocalizationAdapter extends RecyclerView.Adapter<LocalizationAdapte
             super(itemView);
             tvBeaconName = binding.tvTitleRv;
             tvBeaconDesc = binding.tvSubtitle;
+
+            itemView.setOnClickListener(v ->  {
+                int position = getAdapterPosition();
+
+                if (position != RecyclerView.NO_POSITION) {
+                    Beacon clickedBeacon = allBeaconsList.get(position);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Do you want to navigate to: ");
+                    builder.setMessage(clickedBeacon.beaconName+"?");
+
+                    builder.setNegativeButton("NO", ((dialog, which) -> {
+
+                    }));
+
+                    builder.setPositiveButton("YES", ((dialog, which) -> {
+
+                    }));
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+            });
         }
     }
 }

@@ -103,14 +103,10 @@ public class QrScanner extends Fragment implements ZXingScannerView.ResultHandle
         AlertDialog.Builder builder =  new AlertDialog.Builder(getActivity());
         builder.setTitle("Do you want to navigate to: ");
 
-
-        builder.setNegativeButton("NO, TAKE ME BACK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        builder.setNegativeButton("NO, TAKE ME BACK", (dialog, which) -> {
 //                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
 //                intent.putExtra(SearchManager.QUERY, scanResult);
 //                startActivity(intent);
-            }
         });
 
 //        builder.setNeutralButton("NO, TAKE ME BACK", new DialogInterface.OnClickListener() {
@@ -120,10 +116,7 @@ public class QrScanner extends Fragment implements ZXingScannerView.ResultHandle
 //            }
 //        });
 
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
+        builder.setPositiveButton("YES", (dialog, which) -> {
         });
 
         builder.setMessage(scanResult);
