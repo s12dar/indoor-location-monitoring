@@ -65,6 +65,8 @@
     <string name="app_label">Localization</string>
 
     <!--REWARD MENU-->
-    <string name="txt_reward">Reward</string>
+    <string name="txt_reward_title">Scan for reward</string>
+    <string name="txt_reward_subtitle">There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...</string>
+
     <string name="btn_lets_get_started">Let\'s get started</string>
 </resources>

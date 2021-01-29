@@ -65,5 +65,6 @@ dependencies {
     // Zxing library for qr code scanning
     implementation 'me.dm7.barcodescanner:zxing:1.9.13'
 
-
+    // View pager 2
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 }
