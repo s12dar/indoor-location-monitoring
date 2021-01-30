@@ -1,6 +1,7 @@
 package com.example.localizationserdar.mainmenu;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,9 +39,13 @@ import com.google.firebase.firestore.ListenerRegistration;
 import java.util.Calendar;
 import java.util.LinkedList;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.localizationserdar.utils.Constants.COLLECTION_USERS;
 import static com.example.localizationserdar.utils.Constants.EMPTY_STRING;
 import static com.example.localizationserdar.utils.Constants.EXISTING_USER;
+import static com.example.localizationserdar.utils.Constants.NOT_FIRST_TIME;
+import static com.example.localizationserdar.utils.Constants.REWARD_COUNT;
+import static com.example.localizationserdar.utils.Constants.SP_FILES;
 import static com.example.localizationserdar.utils.Constants.STATUS_ACCEPTED;
 import static com.example.localizationserdar.utils.Constants.STATUS_PENDING;
 import static com.example.localizationserdar.utils.Constants.STATUS_REJECTED;
@@ -259,7 +264,13 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 Log.d(TAG, "Hello, you pressed Localization menu");
                 break;
             case R.id.menu_reward:
-                Navigation.findNavController(requireView()).navigate(R.id.action_mainMenu_to_rewards);
+                SharedPreferences preferences = requireActivity().getSharedPreferences(SP_FILES, MODE_PRIVATE);
+                String spValue = preferences.getString(REWARD_COUNT, "");
+                if (!spValue.equals(NOT_FIRST_TIME)) {
+                    Navigation.findNavController(requireView()).navigate(R.id.action_mainMenu_to_rewards);
+                } else {
+                    Navigation.findNavController(requireView()).navigate(R.id.action_mainMenu_to_mainReward);
+                }
                 break;
             case R.id.menu_logout:
                 signOut();

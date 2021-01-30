@@ -69,6 +69,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_mainMenu_to_mainReward"
+            app:destination="@id/mainReward"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/login"
@@ -134,7 +141,17 @@
         android:id="@+id/rewards"
         android:name="com.example.localizationserdar.rewards.Rewards"
         android:label="rewards"
-        tools:layout="@layout/rewards" />
+        tools:layout="@layout/rewards" >
+        <action
+            android:id="@+id/action_rewards_to_mainReward"
+            app:destination="@id/mainReward"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/mainMenu"/>
+    </fragment>
     <fragment
         android:id="@+id/qrScanner"
         android:name="com.example.localizationserdar.mainmenu.QrScanner"
@@ -144,4 +161,9 @@
             android:id="@+id/action_qrScanner_to_mainMenu"
             app:destination="@id/mainMenu" />
     </fragment>
+    <fragment
+        android:id="@+id/mainReward"
+        android:name="com.example.localizationserdar.rewards.MainReward"
+        android:label="main_reward"
+        tools:layout="@layout/main_reward" />
 </navigation>

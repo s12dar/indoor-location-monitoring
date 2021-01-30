@@ -1,6 +1,5 @@
 package com.example.localizationserdar.rewards;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.localizationserdar.R;
@@ -26,7 +26,6 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.localizationserdar.utils.Constants.NOT_FIRST_TIME;
 import static com.example.localizationserdar.utils.Constants.REWARD_COUNT;
-import static com.example.localizationserdar.utils.Constants.SP_FILES;
 
 public class Rewards extends Fragment {
 
@@ -54,11 +53,8 @@ public class Rewards extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SharedPreferences preferences = requireActivity().getSharedPreferences(SP_FILES, Context.MODE_PRIVATE);
-        String spValue = preferences.getString(REWARD_COUNT, "");
-
-        if (!spValue.equals(NOT_FIRST_TIME)) {
-
+//        SharedPreferences preferences = requireActivity().getSharedPreferences(SP_FILES, Context.MODE_PRIVATE);
+//        String spValue = preferences.getString(REWARD_COUNT, "");
             setUpRewardAdapter();
             ViewPager2 rewardViewPager = binding.vpReward;
             rewardViewPager.setAdapter(rewardAdapter);
@@ -80,11 +76,11 @@ public class Rewards extends Fragment {
                 spEditor.putString(REWARD_COUNT, NOT_FIRST_TIME);
                 spEditor.apply();
 
+                Navigation.findNavController(view).navigate(R.id.action_rewards_to_mainReward);
                 String hello = sp.getString(REWARD_COUNT, "");
                 Log.d("DEBUGGING..", hello);
             });
         }
-    }
 
     private void setUpRewardAdapter() {
         List<RewardItem> rewardItemList = new ArrayList<>();
