@@ -1,6 +1,9 @@
 package com.example.localizationserdar.rewards;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +18,15 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.RewardsBinding;
+import com.example.localizationserdar.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.example.localizationserdar.utils.Constants.NOT_FIRST_TIME;
+import static com.example.localizationserdar.utils.Constants.REWARD_COUNT;
+import static com.example.localizationserdar.utils.Constants.SP_FILES;
 
 public class Rewards extends Fragment {
 
@@ -44,20 +53,37 @@ public class Rewards extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setUpRewardAdapter();
-        ViewPager2 rewardViewPager = binding.vpReward;
-        rewardViewPager.setAdapter(rewardAdapter);
 
-        setUpIndicators();
-        setUpCurrentIndicator(0);
+        SharedPreferences preferences = requireActivity().getSharedPreferences(SP_FILES, Context.MODE_PRIVATE);
+        String spValue = preferences.getString(REWARD_COUNT, "");
 
-        rewardViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                setUpCurrentIndicator(position);
-            }
-        });
+        if (!spValue.equals(NOT_FIRST_TIME)) {
+
+            setUpRewardAdapter();
+            ViewPager2 rewardViewPager = binding.vpReward;
+            rewardViewPager.setAdapter(rewardAdapter);
+
+            setUpIndicators();
+            setUpCurrentIndicator(0);
+
+            rewardViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    setUpCurrentIndicator(position);
+                }
+            });
+
+            SharedPreferences sp = requireActivity().getSharedPreferences(Constants.SP_FILES, MODE_PRIVATE);
+            binding.btnGetStarted.setOnClickListener(v -> {
+                SharedPreferences.Editor spEditor = sp.edit();
+                spEditor.putString(REWARD_COUNT, NOT_FIRST_TIME);
+                spEditor.apply();
+
+                String hello = sp.getString(REWARD_COUNT, "");
+                Log.d("DEBUGGING..", hello);
+            });
+        }
     }
 
     private void setUpRewardAdapter() {

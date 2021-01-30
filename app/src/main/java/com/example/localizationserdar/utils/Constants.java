@@ -37,4 +37,10 @@ public class Constants {
     public static final String USER_STATUS = "userStatus";
     public static final String EMPTY_STRING = "";
 
+    /**
+     * REWARD
+     */
+    public static final String REWARD_COUNT = "rewardCount";
+    public static final String NOT_FIRST_TIME = "notFirstTime";
+    public static final String SP_FILES = "spFiles";
 }
