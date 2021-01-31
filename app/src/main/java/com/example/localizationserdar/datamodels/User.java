@@ -5,6 +5,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.PropertyName;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.example.localizationserdar.utils.Constants.CREATED_AT;
@@ -31,6 +32,8 @@ public class User {
     public Timestamp createdAt;
     @PropertyName(VERIFICATION_STATUS)
     public String verificationStatus;
+
+    public List<Beacon> beacons;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();

@@ -16,6 +16,7 @@ import com.example.localizationserdar.LocalizationLevel;
 import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.RegistrationBinding;
 import com.example.localizationserdar.datamanager.DataManager;
+import com.example.localizationserdar.datamodels.Beacon;
 import com.example.localizationserdar.datamodels.User;
 import com.example.localizationserdar.utils.OnboardingUtils;
 import com.google.firebase.Timestamp;
@@ -125,11 +126,20 @@ public class Registration extends Fragment {
                             user.email = email;
                             user.createdAt = new Timestamp(new Date());
                             user.verificationStatus = STATUS_PENDING;
+
+                            Beacon beacon = new Beacon();
+
+                            beacon.beaconName = "Hello";
+                            beacon.beaconDesc = "Hahahha";
+                            beacon.beaconId = "123";
+
+                            user.beacons.add(beacon);
+
                         } else {
                             user = LocalizationLevel.getInstance().currentUser;
                         }
 
-                        Log.d("The user info is here", user.userId+ user.firstName+user.lastName+ user.email+user.phoneNumber);
+                        Log.d("The user info is here", user.userId + user.firstName + user.lastName + user.email + user.phoneNumber);
 
                         DataManager.getInstance().createUser(user, (success, exception) -> {
                             if (success != null && success) {

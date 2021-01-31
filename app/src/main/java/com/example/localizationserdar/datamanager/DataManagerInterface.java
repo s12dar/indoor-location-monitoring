@@ -11,4 +11,6 @@ public interface DataManagerInterface {
     void getCurrentUser(DataListener<User> listener);
     void updateUser(User user, DataListener<Boolean> listener);
     void getBeacons(DataListener<List<Beacon>> listener);
+    void createBeaconInfoReward(User user, Beacon beacon, DataListener<Boolean> listener);
+    void updateBeacon(User user, Beacon beacon, DataListener<Boolean> listener);
 }

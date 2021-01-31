@@ -16,9 +16,17 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import com.example.localizationserdar.LocalizationLevel;
+import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.QrScannerBinding;
+import com.example.localizationserdar.datamanager.DataManager;
+import com.example.localizationserdar.datamodels.Beacon;
+import com.example.localizationserdar.datamodels.User;
 import com.google.zxing.Result;
+
+import java.util.LinkedList;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -103,10 +111,24 @@ public class QrScanner extends Fragment implements ZXingScannerView.ResultHandle
         AlertDialog.Builder builder =  new AlertDialog.Builder(getActivity());
         builder.setTitle("Do you want to navigate to: ");
 
+        User user = LocalizationLevel.getInstance().currentUser;
+        Beacon beacon = new Beacon();
+
+        for (Beacon beacon1: LocalizationLevel.getInstance().allBeacons) {
+            if (scanResult.equals(beacon1.beaconName)) {
+                beacon.beaconId = beacon1.beaconId;
+                beacon.beaconDesc = beacon1.beaconId;
+                beacon.beaconName = beacon1.beaconName;
+                beacon.beaconCount = beacon1.beaconCount;
+                break;
+            }
+        }
+
         builder.setNegativeButton("NO, TAKE ME BACK", (dialog, which) -> {
 //                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
 //                intent.putExtra(SearchManager.QUERY, scanResult);
 //                startActivity(intent);
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_qrScanner_to_mainMenu);
         });
 
 //        builder.setNeutralButton("NO, TAKE ME BACK", new DialogInterface.OnClickListener() {
@@ -117,6 +139,14 @@ public class QrScanner extends Fragment implements ZXingScannerView.ResultHandle
 //        });
 
         builder.setPositiveButton("YES", (dialog, which) -> {
+            DataManager.getInstance().createBeaconInfoReward(user, beacon, (success, exception) -> {
+                if (success != null && success) {
+                    if (user.beacons == null) {
+                        user.beacons = new LinkedList<>();
+                    }
+                    user.beacons.add(beacon);
+                }
+            });
         });
 
         builder.setMessage(scanResult);

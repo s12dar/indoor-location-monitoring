@@ -57,6 +57,27 @@ public class DataManager implements DataManagerInterface {
     }
 
     @Override
+    public void createBeaconInfoReward(User user, Beacon beacon, DataListener<Boolean> listener) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            listener.onData(null, new FirebaseAuthInvalidUserException(AUTHENTICATION, INVALID_USER));
+        }
+
+        WriteBatch createBeaconInfoReward = FirebaseFirestore.getInstance().batch();
+        DocumentReference subBeaconDocRef = FirebaseFirestore.getInstance().collection(COLLECTION_USERS).document(user.userId).collection(COLLECTION_BEACONS).document(beacon.beaconId);
+
+        createBeaconInfoReward.set(subBeaconDocRef, beacon.toMap());
+        createBeaconInfoReward.commit().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                listener.onData(true, null);
+            } else {
+                listener.onData(false, task.getException());
+            }
+        });
+    }
+
+
+    @Override
     public void getCurrentUser(DataListener<User> listener) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) {
@@ -93,8 +114,6 @@ public class DataManager implements DataManagerInterface {
         }
     }
 
-
-
     @Override
     public void updateUser(User user, DataListener<Boolean> listener) {
         WriteBatch updateUserDetails = FirebaseFirestore.getInstance().batch();
@@ -110,6 +129,24 @@ public class DataManager implements DataManagerInterface {
             }
         });
     }
+
+
+    @Override
+    public void updateBeacon(User user, Beacon beacon, DataListener<Boolean> listener) {
+        WriteBatch updateBeaconDetails = FirebaseFirestore.getInstance().batch();
+        DocumentReference subBeaconDocRef = FirebaseFirestore.getInstance().collection(COLLECTION_USERS).document(user.userId).collection(COLLECTION_BEACONS).document(beacon.beaconId);
+
+        updateBeaconDetails.update(subBeaconDocRef, beacon.toMap());
+        updateBeaconDetails.commit().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                listener.onData(true, null);
+            } else {
+                listener.onData(false, task.getException());
+            }
+        });
+    }
+
+
 
     @Override
     public void getBeacons(DataListener<List<Beacon>> listener) {
@@ -139,6 +176,5 @@ public class DataManager implements DataManagerInterface {
                     });
         }
     }
-
 
 }

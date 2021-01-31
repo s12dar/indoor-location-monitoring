@@ -12,6 +12,7 @@ public class LocalizationLevel extends Application {
 
     public static LocalizationLevel mInstance;
     public User currentUser;
+    public Beacon beacon;
     public List<Beacon> allBeacons;
 
     private DataListener<List<Object>> listener;
