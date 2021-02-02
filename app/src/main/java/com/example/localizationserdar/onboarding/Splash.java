@@ -75,7 +75,7 @@ public class Splash extends Fragment {
         if (mUser != null) {
             Navigation.findNavController(binding.getRoot()).navigate(R.id.action_splash_to_mainMenu);
         } else {
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_splash_to_registration);
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_splash_to_welcome);
         }
     }
 }

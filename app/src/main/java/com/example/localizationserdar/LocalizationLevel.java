@@ -22,31 +22,6 @@ public class LocalizationLevel extends Application {
         return mInstance;
     }
 
-//    public void getBeacons(boolean forceReload, DataListener<List<Object>> newListener) {
-//        listener = newListener;
-
-//        if (!loadingData && (forceReload || allBeacons == null || allBeacons.size() == 0)) {
-//            loadingData = true;
-//            allBeacons = new LinkedList<>();
-//            DataManager.getInstance().getBeacons((beacons, exception) -> {
-//                if (beacons != null) {
-//                    if (allBeacons == null) {
-//                        allBeacons = new LinkedList<>();
-//                    }
-//                    allBeacons.addAll(beacons);
-//                }
-//                if (listener != null) {
-//                    listener.onData(allBeacons, exception);
-//                }
-//                loadingData = false;
-//            });
-//        } else {
-//            if (listener != null) {
-//                listener.onData(allBeacons, null);
-//            }
-//        }
-//    }
-//    }
     @Override
     public void onCreate() {
         super.onCreate();

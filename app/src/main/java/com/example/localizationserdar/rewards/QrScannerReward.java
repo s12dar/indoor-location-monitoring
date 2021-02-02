@@ -1,4 +1,4 @@
-package com.example.localizationserdar.mainmenu;
+package com.example.localizationserdar.rewards;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,38 +11,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.example.localizationserdar.LocalizationLevel;
-import com.example.localizationserdar.R;
-import com.example.localizationserdar.databinding.QrScannerBinding;
+import com.example.localizationserdar.databinding.QrScannerRewardBinding;
 import com.example.localizationserdar.datamanager.DataManager;
 import com.example.localizationserdar.datamodels.Beacon;
 import com.example.localizationserdar.datamodels.User;
 import com.google.zxing.Result;
 
+import java.util.LinkedList;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static android.Manifest.permission.CAMERA;
 
-public class QrScanner extends Fragment implements ZXingScannerView.ResultHandler {
+public class QrScannerReward extends Fragment implements ZXingScannerView.ResultHandler {
 
+    private QrScannerRewardBinding binding;
     private ZXingScannerView mScannerView;
     private static final int REQUEST_CAMERA = 1;
-    private QrScannerBinding binding;
 
-    public QrScanner() {
+    public QrScannerReward() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mScannerView = new ZXingScannerView(requireContext());
         requireActivity().setContentView(mScannerView);
 
@@ -86,14 +85,8 @@ public class QrScanner extends Fragment implements ZXingScannerView.ResultHandle
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = QrScannerBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        binding = QrScannerRewardBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -106,44 +99,50 @@ public class QrScanner extends Fragment implements ZXingScannerView.ResultHandle
     public void handleResult(Result rawResult) {
         final String scanResult = rawResult.getText().trim();
         AlertDialog.Builder builder =  new AlertDialog.Builder(getActivity());
-        builder.setTitle("Do you want to navigate to: ");
+        builder.setTitle("Do you submit this destination: ");
 
         User user = LocalizationLevel.getInstance().currentUser;
         Beacon beacon = new Beacon();
 
-//        for (Beacon beacon1: LocalizationLevel.getInstance().allBeacons) {
-//            if (scanResult.equals(beacon1.beaconName)) {
-//                beacon.beaconId = beacon1.beaconId;
-//                beacon.beaconDesc = beacon1.beaconId;
-//                beacon.beaconName = beacon1.beaconName;
-//                beacon.beaconCount = beacon1.beaconCount;
-//                break;
-//            }
-//        }
+        for (Beacon beacon1: LocalizationLevel.getInstance().allBeacons) {
+            if (scanResult.equals(beacon1.beaconName)) {
+                beacon.beaconId = beacon1.beaconId;
+                beacon.beaconDesc = beacon1.beaconId;
+                beacon.beaconName = beacon1.beaconName;
+                beacon.beaconCount = beacon1.beaconCount;
+                break;
+            }
+        }
 
         builder.setNegativeButton("NO, TAKE ME BACK", (dialog, which) -> {
 //                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
 //                intent.putExtra(SearchManager.QUERY, scanResult);
 //                startActivity(intent);
-            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_qrScanner_to_mainMenu);
+//            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_qrScanner_to_mainMenu);
         });
 
-//        builder.setNeutralButton("NO, TAKE ME BACK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                Navigation.findNavController(mScannerView).navigateUp();
-//            }
-//        });
-
         builder.setPositiveButton("YES", (dialog, which) -> {
-            DataManager.getInstance().createBeaconInfoReward(user, beacon, (success, exception) -> {
-//                if (success != null && success) {
-//                    if (user.beacons == null) {
-//                        user.beacons = new LinkedList<>();
-//                    }
-//                    user.beacons.add(beacon);
-//                }
-            });
+            if (LocalizationLevel.getInstance().currentUser.beacons != null && LocalizationLevel.getInstance().currentUser.beacons.contains(scanResult)) {
+                int count = Integer.parseInt(beacon.beaconCount) + 1;
+                beacon.beaconCount = String.valueOf(count);
+                DataManager.getInstance().updateBeacon(user, beacon, (success, exception) -> {
+                    if (success != null && success) {
+                        if (user.beacons == null) {
+                            user.beacons = new LinkedList<>();
+                        }
+                    }
+                });
+            } else {
+                DataManager.getInstance().createBeaconInfoReward(user, beacon, (success, exception) -> {
+                    if (success != null && success) {
+                        if (user.beacons == null) {
+                            user.beacons = new LinkedList<>();
+                        }
+                        user.beacons.add(beacon);
+                    }
+                });
+            }
+            LocalizationLevel.getInstance().currentUser = user;
         });
 
         builder.setMessage(scanResult);

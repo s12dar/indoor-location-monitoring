@@ -118,15 +118,15 @@
         android:label="splash"
         tools:layout="@layout/splash" >
         <action
-            android:id="@+id/action_splash_to_registration"
-            app:destination="@id/registration"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_out"
-            app:popExitAnim="@android:anim/fade_in" />
-        <action
             android:id="@+id/action_splash_to_mainMenu"
             app:destination="@id/mainMenu"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_splash_to_welcome"
+            app:destination="@id/welcome"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
@@ -165,5 +165,38 @@
         android:id="@+id/mainReward"
         android:name="com.example.localizationserdar.rewards.MainReward"
         android:label="main_reward"
-        tools:layout="@layout/main_reward" />
+        tools:layout="@layout/main_reward" >
+        <action
+            android:id="@+id/action_mainReward_to_qrScannerReward"
+            app:destination="@id/qrScannerReward"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_in"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/qrScannerReward"
+        android:name="com.example.localizationserdar.rewards.QrScannerReward"
+        android:label="qr_scanner_reward"
+        tools:layout="@layout/qr_scanner_reward" />
+    <fragment
+        android:id="@+id/welcome"
+        android:name="com.example.localizationserdar.onboarding.Welcome"
+        android:label="welcome"
+        tools:layout="@layout/welcome" >
+        <action
+            android:id="@+id/action_welcome_to_registration"
+            app:destination="@id/registration"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_welcome_to_login"
+            app:destination="@id/login"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
 </navigation>
