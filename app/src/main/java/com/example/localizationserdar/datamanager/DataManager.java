@@ -172,4 +172,35 @@ public class DataManager implements DataManagerInterface {
                     });
         }
     }
+
+    @Override
+    public void getBeaconsBelongsToUser(User user, DataListener<List<Beacon>> listener) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser == null) {
+            listener.onData(null, new FirebaseAuthInvalidUserException(AUTHENTICATION, INVALID_USER));
+        } else {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection(COLLECTION_USERS).document(user.userId).collection(COLLECTION_BEACONS)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            List<Beacon> beacons = new LinkedList<>();
+                            if (querySnapshot == null || querySnapshot.isEmpty()) {
+                                listener.onData(null, null);
+                                return;
+                            }
+                            for (QueryDocumentSnapshot document: querySnapshot) {
+                                beacons.add(document.toObject(Beacon.class));
+                            }
+                            listener.onData(beacons, null);
+                        } else {
+                            listener.onData(null, task.getException());
+                        }
+                    });
+        }
+    }
+
+
 }

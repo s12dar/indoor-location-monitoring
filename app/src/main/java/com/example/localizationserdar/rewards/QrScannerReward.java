@@ -14,8 +14,10 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.localizationserdar.LocalizationLevel;
+import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.QrScannerRewardBinding;
 import com.example.localizationserdar.datamanager.DataManager;
 import com.example.localizationserdar.datamodels.Beacon;
@@ -33,6 +35,7 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
     private QrScannerRewardBinding binding;
     private ZXingScannerView mScannerView;
     private static final int REQUEST_CAMERA = 1;
+    private boolean isExists = false;
 
     public QrScannerReward() {
         // Required empty public constructor
@@ -121,18 +124,24 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
 //            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_qrScanner_to_mainMenu);
         });
 
+        for (Beacon beacon1: LocalizationLevel.getInstance().currentUser.beacons) {
+            if (beacon.beaconName.equals(beacon1.beaconName)) {
+                isExists = true;
+                break;
+            }
+            isExists = false;
+        }
+
         builder.setPositiveButton("YES", (dialog, which) -> {
-//            if (LocalizationLevel.getInstance().currentUser.beacons != null && LocalizationLevel.getInstance().currentUser.beacons.contains(scanResult)) {
-//                int count = Integer.parseInt(beacon.beaconCount) + 1;
-//                beacon.beaconCount = String.valueOf(count);
-//                DataManager.getInstance().updateBeacon(user, beacon, (success, exception) -> {
-//                    if (success != null && success) {
-//                        if (user.beacons == null) {
-//                            user.beacons = new LinkedList<>();
-//                        }
-//                    }
-//                });
-//            } else {
+            if (isExists) {
+                int count = Integer.parseInt(beacon.beaconCount) + 1;
+                beacon.beaconCount = String.valueOf(count);
+                DataManager.getInstance().updateBeacon(user, beacon, (success, exception) -> {
+                    if (success != null && success) {
+                       LocalizationLevel.getInstance().currentUser = user;
+                    }
+                });
+            } else {
                 DataManager.getInstance().createBeaconInfoReward(user, beacon, (success, exception) -> {
                     if (success != null && success) {
                         if (user.beacons == null) {
@@ -141,8 +150,9 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
                         user.beacons.add(beacon);
                     }
                 });
-//            }
+            }
             LocalizationLevel.getInstance().currentUser = user;
+            Navigation.findNavController(requireView()).navigate(R.id.action_qrScannerReward_to_mainReward);
         });
 
         builder.setMessage(scanResult);

@@ -48,8 +48,6 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_regular"
-                android:textColor="@color/colorBlack"
                 app:layout_constraintStart_toEndOf="@+id/scan_item_pic"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Hello" />
@@ -60,10 +58,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:fontFamily="@font/poppins_regular"
                 app:layout_constraintStart_toEndOf="@+id/scan_item_pic"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title_rv"
                 tools:text="Hello, my name is Serdar" />
+
+            <TextView
+                android:id="@+id/tv_scanned_times"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="x2"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
