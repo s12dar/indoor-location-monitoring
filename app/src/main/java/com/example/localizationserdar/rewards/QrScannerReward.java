@@ -107,7 +107,7 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
         for (Beacon beacon1: LocalizationLevel.getInstance().allBeacons) {
             if (scanResult.equals(beacon1.beaconName)) {
                 beacon.beaconId = beacon1.beaconId;
-                beacon.beaconDesc = beacon1.beaconId;
+                beacon.beaconDesc = beacon1.beaconDesc;
                 beacon.beaconName = beacon1.beaconName;
                 beacon.beaconCount = beacon1.beaconCount;
                 break;
@@ -122,17 +122,17 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
         });
 
         builder.setPositiveButton("YES", (dialog, which) -> {
-            if (LocalizationLevel.getInstance().currentUser.beacons != null && LocalizationLevel.getInstance().currentUser.beacons.contains(scanResult)) {
-                int count = Integer.parseInt(beacon.beaconCount) + 1;
-                beacon.beaconCount = String.valueOf(count);
-                DataManager.getInstance().updateBeacon(user, beacon, (success, exception) -> {
-                    if (success != null && success) {
-                        if (user.beacons == null) {
-                            user.beacons = new LinkedList<>();
-                        }
-                    }
-                });
-            } else {
+//            if (LocalizationLevel.getInstance().currentUser.beacons != null && LocalizationLevel.getInstance().currentUser.beacons.contains(scanResult)) {
+//                int count = Integer.parseInt(beacon.beaconCount) + 1;
+//                beacon.beaconCount = String.valueOf(count);
+//                DataManager.getInstance().updateBeacon(user, beacon, (success, exception) -> {
+//                    if (success != null && success) {
+//                        if (user.beacons == null) {
+//                            user.beacons = new LinkedList<>();
+//                        }
+//                    }
+//                });
+//            } else {
                 DataManager.getInstance().createBeaconInfoReward(user, beacon, (success, exception) -> {
                     if (success != null && success) {
                         if (user.beacons == null) {
@@ -141,7 +141,7 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
                         user.beacons.add(beacon);
                     }
                 });
-            }
+//            }
             LocalizationLevel.getInstance().currentUser = user;
         });
 
