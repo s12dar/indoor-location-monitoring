@@ -126,14 +126,6 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
 //            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_qrScanner_to_mainMenu);
         });
 
-//        for (Beacon beacon1: LocalizationLevel.getInstance().currentUser.beacons) {
-//            if (scanResult.equals(beacon1.beaconName)) {
-//                isExists = true;
-//                break;
-//            }
-//            isExists = false;
-//        }
-
         for (int i = 0; i < LocalizationLevel.getInstance().currentUser.beacons.size(); i++) {
             if (scanResult.equals(LocalizationLevel.getInstance().currentUser.beacons.get(i).beaconName)) {
                 isExists = true;
@@ -146,9 +138,9 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
         int finalPosition = position;
         builder.setPositiveButton("YES", (dialog, which) -> {
             if (isExists) {
-                int count = Integer.parseInt(LocalizationLevel.getInstance().currentUser.beacons.get(finalPosition).beaconCount) + 1;
-                LocalizationLevel.getInstance().currentUser.beacons.get(finalPosition).beaconCount = String.valueOf(count);
-                DataManager.getInstance().updateBeacon(user, LocalizationLevel.getInstance().currentUser.beacons.get(finalPosition), (success, exception) -> {
+                int count = Integer.parseInt(allBeacons.get(finalPosition).beaconCount) + 1;
+                allBeacons.get(finalPosition).beaconCount = String.valueOf(count);
+                DataManager.getInstance().updateBeacon(user, allBeacons.get(finalPosition), (success, exception) -> {
                     if (success != null && success) {
                        LocalizationLevel.getInstance().currentUser = user;
                     }
