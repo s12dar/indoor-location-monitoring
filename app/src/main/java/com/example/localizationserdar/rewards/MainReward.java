@@ -42,6 +42,6 @@ public class MainReward extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.btnScanScanning.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_mainReward_to_qrScannerReward));
+        binding.btnStartScanning.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_mainReward_to_qrScannerReward));
     }
 }
