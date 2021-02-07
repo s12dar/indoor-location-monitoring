@@ -105,7 +105,9 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
         builder.setTitle("Do you submit this destination: ");
 
         User user = LocalizationLevel.getInstance().currentUser;
+        LinkedList<Beacon> allBeacons = (LinkedList<Beacon>) LocalizationLevel.getInstance().currentUser.beacons;
         Beacon beacon = new Beacon();
+        int position = 0;
 
         for (Beacon beacon1: LocalizationLevel.getInstance().allBeacons) {
             if (scanResult.equals(beacon1.beaconName)) {
@@ -124,19 +126,29 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
 //            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_qrScanner_to_mainMenu);
         });
 
-        for (Beacon beacon1: LocalizationLevel.getInstance().currentUser.beacons) {
-            if (beacon.beaconName.equals(beacon1.beaconName)) {
+//        for (Beacon beacon1: LocalizationLevel.getInstance().currentUser.beacons) {
+//            if (scanResult.equals(beacon1.beaconName)) {
+//                isExists = true;
+//                break;
+//            }
+//            isExists = false;
+//        }
+
+        for (int i = 0; i < LocalizationLevel.getInstance().currentUser.beacons.size(); i++) {
+            if (scanResult.equals(LocalizationLevel.getInstance().currentUser.beacons.get(i).beaconName)) {
                 isExists = true;
+                position = i;
                 break;
             }
             isExists = false;
         }
 
+        int finalPosition = position;
         builder.setPositiveButton("YES", (dialog, which) -> {
             if (isExists) {
-                int count = Integer.parseInt(beacon.beaconCount) + 1;
-                beacon.beaconCount = String.valueOf(count);
-                DataManager.getInstance().updateBeacon(user, beacon, (success, exception) -> {
+                int count = Integer.parseInt(LocalizationLevel.getInstance().currentUser.beacons.get(finalPosition).beaconCount) + 1;
+                LocalizationLevel.getInstance().currentUser.beacons.get(finalPosition).beaconCount = String.valueOf(count);
+                DataManager.getInstance().updateBeacon(user, LocalizationLevel.getInstance().currentUser.beacons.get(finalPosition), (success, exception) -> {
                     if (success != null && success) {
                        LocalizationLevel.getInstance().currentUser = user;
                     }
