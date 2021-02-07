@@ -24,7 +24,7 @@ public class LocalizationAdapter extends RecyclerView.Adapter<LocalizationAdapte
     private Context context;
     private List<Beacon> beaconList;
     private List<Beacon> allBeaconsList;
-    LocalizationItemBinding binding;
+    private LocalizationItemBinding binding;
 
 
     public LocalizationAdapter(Context context, List<Beacon> beaconList) {

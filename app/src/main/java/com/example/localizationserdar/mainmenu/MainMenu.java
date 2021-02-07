@@ -57,8 +57,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private MainMenuBinding binding;
     private ListenerRegistration modStatusListener;
     private BottomSheetBinding bottomSheetBinding;
-
-    User user;
+    private User user;
 
     private static final String TAG = "DEBUGGING...";
 
@@ -69,6 +68,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        user = LocalizationLevel.getInstance().currentUser;
     }
 
     @Override
@@ -107,13 +107,13 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null && getArguments().getString(USER_STATUS, EMPTY_STRING).equals(EXISTING_USER)) {
-            Log.d("Hello, Serdar, ", "How are you?");
             DataManager.getInstance().getCurrentUser(
                     (user, exception) -> {
                         if (user != null) {
                             LocalizationLevel.getInstance().currentUser = user;
                         }
                     });
+            user = LocalizationLevel.getInstance().currentUser;
         }
 
         user = LocalizationLevel.getInstance().currentUser;
@@ -125,7 +125,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         setNavDrawer(toolbar);
 
         //Setting the Greetings message
-        setGreetingsText();
+        setGreetingsText(user);
 
         //Display moderation overlay (in case pending/declined)
         manageModerationStatus();
@@ -172,8 +172,6 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
         assert binding.bottomSheet.fabScan != null;
         binding.bottomSheet.fabScan.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_mainMenu_to_qrScanner));
-
-
 
     }
     private void setNavDrawer(Toolbar toolbar) {
@@ -223,12 +221,11 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 });
     }
 
-    private void setGreetingsText() {
+    private void setGreetingsText(User user) {
         View header = binding.navView.getHeaderView(0);
         TextView tvGreetings = header.findViewById(R.id.tv_morning);
         TextView tvName  = header.findViewById(R.id.tv_name);
 
-        user = LocalizationLevel.getInstance().currentUser;
         tvName.setText(user.firstName);
 
         Calendar rightNow = Calendar.getInstance();
@@ -275,7 +272,6 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             case R.id.menu_logout:
                 signOut();
                 break;
-
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;

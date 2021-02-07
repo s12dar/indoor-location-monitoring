@@ -76,7 +76,6 @@ public class DataManager implements DataManagerInterface {
         });
     }
 
-
     @Override
     public void getCurrentUser(DataListener<User> listener) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -130,7 +129,6 @@ public class DataManager implements DataManagerInterface {
         });
     }
 
-
     @Override
     public void updateBeacon(User user, Beacon beacon, DataListener<Boolean> listener) {
         WriteBatch updateBeaconDetails = FirebaseFirestore.getInstance().batch();
@@ -145,8 +143,6 @@ public class DataManager implements DataManagerInterface {
             }
         });
     }
-
-
 
     @Override
     public void getBeacons(DataListener<List<Beacon>> listener) {
@@ -176,5 +172,4 @@ public class DataManager implements DataManagerInterface {
                     });
         }
     }
-
 }
