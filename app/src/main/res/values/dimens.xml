@@ -4,4 +4,5 @@
     <dimen name="size_generic">8sp</dimen>
     <dimen name="eighteen">18sp</dimen>
     <dimen name="twenty">20sp</dimen>
+    <dimen name="twelve">12sp</dimen>
 </resources>

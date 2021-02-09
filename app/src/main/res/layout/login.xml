@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="24dp"
     android:fillViewport="true"
     android:fitsSystemWindows="true"
@@ -13,113 +13,120 @@
         android:id="@+id/title_welcome_back"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_medium"
         android:gravity="center"
         android:text="@string/tv_welcome_back"
         android:textColor="@color/colorDinner"
         android:textSize="@dimen/twenty_four"
-        android:fontFamily="@font/poppins_medium"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_description_welcome_back"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/tv_join_us_description"
         android:fontFamily="@font/poppins_regular"
         android:gravity="center"
+        android:text="@string/tv_join_us_description"
         android:textColor="@color/colorDinner"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_welcome_back"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_welcome_back" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".3" />
 
     <EditText
         android:id="@+id/et_login_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_border_mp"
         android:hint="@string/hint_email"
         android:inputType="textEmailAddress"
-        android:padding="8dp"
+        android:padding="12dp"
         android:textColor="@color/colorDinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_regular"
         android:textSize="12sp"
-        android:background="@drawable/rounded_border_mp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gl_20" />
 
     <EditText
         android:id="@+id/et_login_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_border_mp"
         android:hint="@string/hint_password"
         android:inputType="textPassword"
-        android:layout_width="wrap_content"
-        android:padding="8dp"
+        android:padding="12dp"
         android:textColor="@color/colorDinner"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_regular"
         android:textSize="12sp"
-        android:background="@drawable/rounded_border_mp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_login_email"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_login_email" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/Buttons.MainAndDisabled"
         android:id="@+id/btn_sign_in"
+        style="@style/Buttons.MainAndDisabled"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/btn_sign_in"
-        android:layout_marginBottom="56dp"
         android:layout_marginTop="32dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="56dp"
+        android:text="@string/btn_sign_in"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_login_password" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_vertical_17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".17" />
+
 
     <TextView
         android:id="@+id/tv_already_have_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:fontFamily="@font/poppins_regular"
         android:text="@string/tv_no_account_yet"
         android:textSize="12sp"
-        android:textColor="@color/colorDinner"
-        app:layout_constraintEnd_toEndOf="@+id/btn_sign_in"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/gl_vertical_17"
         app:layout_constraintTop_toBottomOf="@id/btn_sign_in" />
 
     <TextView
         android:id="@+id/tv_join_us"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_medium"
         android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
         android:text="@string/tv_join_us"
-        android:textColor="@color/colorDinner"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/tv_already_have_account"
-        app:layout_constraintEnd_toEndOf="@id/btn_sign_in"
-        app:layout_constraintTop_toBottomOf="@id/btn_sign_in" />
+        app:layout_constraintTop_toBottomOf="@id/btn_sign_in"
+        android:layout_marginStart="16dp" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:layout_marginTop="16dp"
         android:indeterminate="true"
         android:indeterminateTintMode="src_atop"
-        android:indeterminateTint="@color/colorDinner"
-        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_sign_in"
-        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_join_us"
         tools:targetApi="lollipop" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

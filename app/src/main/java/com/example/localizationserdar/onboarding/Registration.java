@@ -67,11 +67,8 @@ public class Registration extends Fragment {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         ((OnboardingUtils)requireActivity()).hideToolbar();
 
-//        if (currentUser != null) {
-//            Navigation.findNavController(view).navigate(R.id.action_registration_to_mainMenu);
-//        }
-
         binding.btnCreateAccount.setOnClickListener(v -> {
+            ((OnboardingUtils) requireActivity()).hideKeyboard(requireContext(), view);
 
             String email = binding.etEmail.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();

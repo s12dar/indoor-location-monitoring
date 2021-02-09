@@ -60,6 +60,8 @@ public class Login extends Fragment {
 
         binding.btnSignIn.setOnClickListener(v -> {
 
+            ((OnboardingUtils) requireActivity()).hideKeyboard(requireContext(), view);
+
             String email = binding.etLoginEmail.getText().toString().trim();
             String password = binding.etLoginPassword.getText().toString().trim();
 

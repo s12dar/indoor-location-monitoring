@@ -62,7 +62,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_search"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="16dp"
         android:layout_margin="16dp"
