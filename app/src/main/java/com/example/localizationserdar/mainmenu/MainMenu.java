@@ -111,6 +111,15 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                     (user, exception) -> {
                         if (user != null) {
                             LocalizationLevel.getInstance().currentUser = user;
+                            DataManager.getInstance().getBeaconsBelongsToUser(
+                                    (user), (beacons, exception2) -> {
+                                        if (beacons != null) {
+                                            LocalizationLevel.getInstance().currentUser.beacons = beacons;
+                                        } else {
+                                            LocalizationLevel.getInstance().currentUser.beacons = new LinkedList<>();
+                                        }
+                                    }
+                            );
                         }
                     });
             user = LocalizationLevel.getInstance().currentUser;
