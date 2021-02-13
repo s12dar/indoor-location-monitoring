@@ -15,6 +15,8 @@ public class Constants {
     public static final String STATUS_PENDING = "pending";
     public static final String STATUS_REJECTED = "rejected";
     public static final String STATUS_ACCEPTED = "accepted";
+    public static final String USER_LIVE_LOCATION = "liveLocation";
+    public static final String LAST_LOCATION_UPDATED_AT = "lastLocationUpdatedAt";
 
     /**
      * BEACON DATA

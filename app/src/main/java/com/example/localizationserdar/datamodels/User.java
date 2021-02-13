@@ -2,6 +2,7 @@ package com.example.localizationserdar.datamodels;
 
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.PropertyName;
 
 import java.util.HashMap;
@@ -11,9 +12,11 @@ import java.util.Map;
 import static com.example.localizationserdar.utils.Constants.CREATED_AT;
 import static com.example.localizationserdar.utils.Constants.EMAIL;
 import static com.example.localizationserdar.utils.Constants.FIRST_NAME;
+import static com.example.localizationserdar.utils.Constants.LAST_LOCATION_UPDATED_AT;
 import static com.example.localizationserdar.utils.Constants.LAST_NAME;
 import static com.example.localizationserdar.utils.Constants.PHONE_NUMBER;
 import static com.example.localizationserdar.utils.Constants.UID;
+import static com.example.localizationserdar.utils.Constants.USER_LIVE_LOCATION;
 import static com.example.localizationserdar.utils.Constants.VERIFICATION_STATUS;
 
 public class User {
@@ -32,6 +35,10 @@ public class User {
     public Timestamp createdAt;
     @PropertyName(VERIFICATION_STATUS)
     public String verificationStatus;
+    @PropertyName(USER_LIVE_LOCATION)
+    public GeoPoint liveLocation;
+    @PropertyName(LAST_LOCATION_UPDATED_AT)
+    public Timestamp lastLocationUpdatedAt;
 
     public List<Beacon> beacons;
 
@@ -44,6 +51,8 @@ public class User {
         map.put(CREATED_AT, createdAt);
         map.put(UID, userId);
         map.put(VERIFICATION_STATUS, verificationStatus);
+        map.put(USER_LIVE_LOCATION, liveLocation);
+        map.put(LAST_LOCATION_UPDATED_AT, lastLocationUpdatedAt);
 
         return map;
     }

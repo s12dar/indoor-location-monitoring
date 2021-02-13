@@ -50,12 +50,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -365,6 +367,18 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
                 Log.d(TAG, "onComplete: latitude: " + geoPoint.getLatitude());
                 Log.d(TAG, "onComplete: longitude: " + geoPoint.getLongitude());
+
+                user.liveLocation = geoPoint;
+                user.lastLocationUpdatedAt = new Timestamp(new Date());
+
+                DataManager.getInstance().updateUser(user, (success, exception) -> {
+                    if (success != null && success) {
+                        LocalizationLevel.getInstance().currentUser = user;
+                        Log.d(TAG, "updatedUserDetails");
+                    } else {
+                        Log.d(TAG, exception.getLocalizedMessage().toString());
+                    }
+                });
             }
         });
 
