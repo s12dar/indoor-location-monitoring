@@ -1,7 +1,15 @@
 package com.example.localizationserdar.mainmenu;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +25,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -30,6 +41,10 @@ import com.example.localizationserdar.datamodels.User;
 import com.example.localizationserdar.localization.LocalizationAdapter;
 import com.example.localizationserdar.utils.OnboardingUtils;
 import com.github.florent37.tutoshowcase.TutoShowcase;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,8 +57,12 @@ import java.util.LinkedList;
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.localizationserdar.utils.Constants.COLLECTION_USERS;
 import static com.example.localizationserdar.utils.Constants.EMPTY_STRING;
+import static com.example.localizationserdar.utils.Constants.ERROR_DIALOG_REQUEST;
 import static com.example.localizationserdar.utils.Constants.EXISTING_USER;
+import static com.example.localizationserdar.utils.Constants.MAPVIEW_BUNDLE_KEY;
 import static com.example.localizationserdar.utils.Constants.NOT_FIRST_TIME;
+import static com.example.localizationserdar.utils.Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
+import static com.example.localizationserdar.utils.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 import static com.example.localizationserdar.utils.Constants.REWARD_COUNT;
 import static com.example.localizationserdar.utils.Constants.SP_FILES;
 import static com.example.localizationserdar.utils.Constants.STATUS_ACCEPTED;
@@ -52,14 +71,16 @@ import static com.example.localizationserdar.utils.Constants.STATUS_REJECTED;
 import static com.example.localizationserdar.utils.Constants.USER_STATUS;
 import static com.example.localizationserdar.utils.Constants.VERIFICATION_STATUS;
 
-public class MainMenu extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
+public class MainMenu extends Fragment implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
     private MainMenuBinding binding;
     private ListenerRegistration modStatusListener;
     private BottomSheetBinding bottomSheetBinding;
     private User user;
-
+    private boolean mLocationPermissionGranted = false;
     private static final String TAG = "DEBUGGING...";
+
+//    private MapView mMapView;
 
     public MainMenu() {
         // Required empty public constructor
@@ -74,14 +95,154 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     @Override
     public void onDestroy() {
         super.onDestroy();
+        binding.mvMap.onDestroy();
         binding = null;
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        binding.mvMap.onStop();
         if (modStatusListener != null) {
             modStatusListener.remove();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        binding.mvMap.onResume();
+        if (checkMapServices()) {
+            if (mLocationPermissionGranted) {
+                Log.d(TAG, "I have a location permissions");
+            } else {
+                getLocationPermission();
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Bundle mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY);
+        if (mapViewBundle == null) {
+            mapViewBundle = new Bundle();
+            outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
+        }
+
+        binding.mvMap.onSaveInstanceState(mapViewBundle);
+    }
+
+    private void initGoogleMap(Bundle savedInstanceState) {
+        // *** IMPORTANT ***
+        // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
+        // objects or sub-Bundles.
+        Bundle mapViewBundle = null;
+        if (savedInstanceState != null) {
+            mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
+        }
+
+        binding.mvMap.onCreate(mapViewBundle);
+        binding.mvMap.getMapAsync(this);
+    }
+
+    private boolean checkMapServices() {
+        if (isServicesOK()) {
+            return isMapsEnabled();
+        }
+        return false;
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public boolean isMapsEnabled() {
+        LocationManager manager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+            return false;
+        }
+        return true;
+    }
+
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    public boolean isServicesOK() {
+        Log.d(TAG, "isServicesOK: checking google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
+
+        if (available == ConnectionResult.SUCCESS) {
+            //everything is fine and the user can make map requests
+            Log.d(TAG, "isServicesOK: Google Play Services is working");
+            return true;
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            //an error occured but we can resolve it
+            Log.d(TAG, "isServicesOK: an error occured but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        } else {
+            Toast.makeText(getActivity(), "You can't make map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ENABLE_GPS: {
+                if (mLocationPermissionGranted) {
+
+                } else {
+                    getLocationPermission();
+                }
+            }
         }
     }
 
@@ -99,6 +260,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     @Override
     public void onStart() {
         super.onStart();
+        binding.mvMap.onStart();
     }
 
     @SuppressLint("LongLogTag")
@@ -124,6 +286,8 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                     });
             user = LocalizationLevel.getInstance().currentUser;
         }
+
+        initGoogleMap(savedInstanceState);
 
         user = LocalizationLevel.getInstance().currentUser;
 
@@ -183,6 +347,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         binding.bottomSheet.fabScan.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_mainMenu_to_qrScanner));
 
     }
+
     private void setNavDrawer(Toolbar toolbar) {
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), binding.drawerLayout, toolbar, R.string.drawer_controller_open, R.string.drawer_controller_close);
@@ -233,7 +398,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private void setGreetingsText(User user) {
         View header = binding.navView.getHeaderView(0);
         TextView tvGreetings = header.findViewById(R.id.tv_morning);
-        TextView tvName  = header.findViewById(R.id.tv_name);
+        TextView tvName = header.findViewById(R.id.tv_name);
 
         tvName.setText(user.firstName);
 
@@ -246,7 +411,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             tvGreetings.setText(getResources().getString(R.string.tv_afternoon));
         } else if (timeOfDay < 21) {
             tvGreetings.setText(getResources().getString(R.string.tv_evening));
-        } else if (timeOfDay < 24){
+        } else if (timeOfDay < 24) {
             tvGreetings.setText(getResources().getString(R.string.tv_night));
         }
     }
@@ -262,7 +427,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         switch (item.getItemId()) {
             case R.id.menu_profile:
                 Navigation.findNavController(requireView()).navigate(R.id.action_mainMenu_to_settings);
-                Log.d("Hello," ,"You pressed me!");
+                Log.d("Hello,", "You pressed me!");
                 break;
             case R.id.menu_localization:
                 //Logic here
@@ -284,5 +449,35 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        map.setMyLocationEnabled(true);
+    }
+
+    @Override
+    public void onPause() {
+        binding.mvMap.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        binding.mvMap.onLowMemory();
     }
 }

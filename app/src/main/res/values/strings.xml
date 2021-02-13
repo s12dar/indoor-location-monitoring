@@ -74,4 +74,7 @@
     <string name="btn_start_scanning">Start scanning</string>
     <string name="txt_scan_qr">Scan QR code</string>
     <string name="desc_reward_img">Scan Qr code</string>
+
+    <!-- GOOGLE MAPS -->
+    <string name="google_maps_api_key">AIzaSyCq-fkjlPHV6eSOb6ouf7BDtXTrLRmT9ME</string>
 </resources>
