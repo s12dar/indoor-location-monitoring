@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,12 +44,17 @@ import com.example.localizationserdar.utils.OnboardingUtils;
 import com.github.florent37.tutoshowcase.TutoShowcase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.Calendar;
@@ -79,8 +85,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private User user;
     private boolean mLocationPermissionGranted = false;
     private static final String TAG = "DEBUGGING...";
-
-//    private MapView mMapView;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     public MainMenu() {
         // Required empty public constructor
@@ -115,6 +120,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         if (checkMapServices()) {
             if (mLocationPermissionGranted) {
                 Log.d(TAG, "I have a location permissions");
+                getLastKnownLocation();
             } else {
                 getLocationPermission();
             }
@@ -188,6 +194,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
+            getLastKnownLocation();
         } else {
             ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
@@ -238,7 +245,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ENABLE_GPS: {
                 if (mLocationPermissionGranted) {
-
+                    getLastKnownLocation();
                 } else {
                     getLocationPermission();
                 }
@@ -290,6 +297,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         initGoogleMap(savedInstanceState);
 
         user = LocalizationLevel.getInstance().currentUser;
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         NavigationView navigationView = requireView().findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -345,6 +353,25 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
         assert binding.bottomSheet.fabScan != null;
         binding.bottomSheet.fabScan.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_mainMenu_to_qrScanner));
+
+    }
+
+    private void getLastKnownLocation() {
+        Log.d(TAG, "getLastKnownLocation: called.");
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                if (task.isSuccessful()) {
+                    Location location = task.getResult();
+                    GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                    Log.d(TAG, "onComplete: latitude: " + geoPoint.getLatitude());
+                    Log.d(TAG, "onComplete: longitude: " + geoPoint.getLongitude());
+                }
+            }
+        });
 
     }
 
