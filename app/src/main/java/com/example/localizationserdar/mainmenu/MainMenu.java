@@ -46,8 +46,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.Timestamp;
@@ -86,6 +89,8 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private boolean mLocationPermissionGranted = false;
     private static final String TAG = "DEBUGGING...";
     private FusedLocationProviderClient mFusedLocationClient;
+    private GoogleMap mGoogleMap;
+    private LatLngBounds mMapBoundary;
 
     public MainMenu() {
         // Required empty public constructor
@@ -487,6 +492,23 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         return true;
     }
 
+    private void setCameraViewForMap() {
+        //Overall map view window: .2 * .2 = .04;
+        GeoPoint geoPoint = new GeoPoint(user.liveLocation.getLatitude(), user.liveLocation.getLongitude());
+
+        double bottomBoundary = geoPoint.getLatitude() - .1;
+        double leftBoundary = geoPoint.getLongitude() - .1;
+        double topBoundary = geoPoint.getLatitude() + .1;
+        double rightBoundary = geoPoint.getLongitude() + .1;
+
+        mMapBoundary = new LatLngBounds(
+                new LatLng(bottomBoundary, leftBoundary),
+                new LatLng(topBoundary, rightBoundary)
+
+        );
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(mMapBoundary, 0));
+    }
+
     @Override
     public void onMapReady(GoogleMap map) {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -496,6 +518,8 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             return;
         }
         map.setMyLocationEnabled(true);
+        mGoogleMap = map;
+        setCameraViewForMap();
     }
 
     @Override
