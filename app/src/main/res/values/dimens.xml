@@ -5,4 +5,6 @@
     <dimen name="eighteen">18sp</dimen>
     <dimen name="twenty">20sp</dimen>
     <dimen name="twelve">12sp</dimen>
+    <dimen name="custom_marker_image">50dp</dimen>
+    <dimen name="custom_marker_padding">2dp</dimen>
 </resources>

@@ -71,4 +71,7 @@ dependencies {
     // Maps dependencies
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    //Google map utils for clustering
+    implementation 'com.google.maps.android:android-maps-utils:0.5+'
 }

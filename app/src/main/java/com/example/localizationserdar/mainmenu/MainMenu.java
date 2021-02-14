@@ -38,8 +38,11 @@ import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.BottomSheetBinding;
 import com.example.localizationserdar.databinding.MainMenuBinding;
 import com.example.localizationserdar.datamanager.DataManager;
+import com.example.localizationserdar.datamodels.Beacon;
+import com.example.localizationserdar.datamodels.ClusterMarker;
 import com.example.localizationserdar.datamodels.User;
 import com.example.localizationserdar.localization.LocalizationAdapter;
+import com.example.localizationserdar.utils.ClusterManagerRenderer;
 import com.example.localizationserdar.utils.OnboardingUtils;
 import com.github.florent37.tutoshowcase.TutoShowcase;
 import com.google.android.gms.common.ConnectionResult;
@@ -58,7 +61,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.maps.android.clustering.ClusterManager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -91,6 +96,9 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private FusedLocationProviderClient mFusedLocationClient;
     private GoogleMap mGoogleMap;
     private LatLngBounds mMapBoundary;
+    private ClusterManager<ClusterMarker> clusterManager;
+    private ClusterManagerRenderer clusterManagerRenderer;
+    private ArrayList<ClusterMarker> clusterMarkers = new ArrayList<>();
 
     public MainMenu() {
         // Required empty public constructor
@@ -327,7 +335,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         LocalizationAdapter localizationAdapter = new LocalizationAdapter(getActivity(), LocalizationLevel.getInstance().allBeacons);
         binding.bottomSheet.rvBottomSheet.setAdapter(localizationAdapter);
 
-        BottomSheetBehavior behavior = BottomSheetBehavior.from(binding.bottomSheet.bSh);
+        BottomSheetBehavior<androidx.constraintlayout.widget.ConstraintLayout> behavior = BottomSheetBehavior.from(binding.bottomSheet.bSh);
         behavior.setHideable(false);
         behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -387,6 +395,42 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             }
         });
 
+    }
+
+    private void addMapMarkers() {
+        if (mGoogleMap != null) {
+            if (clusterManager == null) {
+                clusterManager = new ClusterManager<>(getActivity().getApplicationContext(), mGoogleMap);
+            }
+
+            if(clusterManagerRenderer == null){
+                clusterManagerRenderer = new ClusterManagerRenderer(
+                        getActivity(),
+                        mGoogleMap,
+                        clusterManager
+                );
+                clusterManager.setRenderer(clusterManagerRenderer);
+            }
+
+            for (Beacon beacon: LocalizationLevel.getInstance().allBeacons) {
+                Log.d(TAG, "addMarkersLocation: location: "+beacon.beaconLocation.toString());
+
+                try {
+                    String snippet = "Determine route to " + beacon.beaconName+"?";
+                    int avatar = R.drawable.oh_hey;
+                    ClusterMarker clusterMarker = new ClusterMarker(
+                            new LatLng(beacon.beaconLocation.getLatitude(), beacon.beaconLocation.getLongitude()),
+                            beacon.beaconName,
+                            snippet, avatar);
+                    clusterManager.addItem(clusterMarker);
+                    clusterMarkers.add(clusterMarker);
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "addMapMarkers: NullPointerException: " + e.getMessage());
+                }
+            }
+            clusterManager.cluster();
+            setCameraViewForMap();
+        }
     }
 
     private void setNavDrawer(Toolbar toolbar) {
@@ -520,6 +564,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         map.setMyLocationEnabled(true);
         mGoogleMap = map;
         setCameraViewForMap();
+        addMapMarkers();
     }
 
     @Override

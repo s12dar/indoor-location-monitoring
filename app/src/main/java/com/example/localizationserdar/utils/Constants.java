@@ -25,6 +25,7 @@ public class Constants {
     public static final String BEACON_ID = "beaconId";
     public static final String BEACON_DESC = "beaconDesc";
     public static final String BEACON_COUNT = "beaconCount";
+    public static final String BEACON_LOCATION = "beaconLocation";
 
     /**
      * FIREBASE DATA
