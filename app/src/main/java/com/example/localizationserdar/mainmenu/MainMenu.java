@@ -2,6 +2,7 @@ package com.example.localizationserdar.mainmenu;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -42,6 +43,7 @@ import com.example.localizationserdar.datamodels.Beacon;
 import com.example.localizationserdar.datamodels.ClusterMarker;
 import com.example.localizationserdar.datamodels.User;
 import com.example.localizationserdar.localization.LocalizationAdapter;
+import com.example.localizationserdar.services.LocationService;
 import com.example.localizationserdar.utils.ClusterManagerRenderer;
 import com.example.localizationserdar.utils.OnboardingUtils;
 import com.github.florent37.tutoshowcase.TutoShowcase;
@@ -369,6 +371,44 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
     }
 
+    private void startLocationService() {
+        if(!isLocationServiceRunning()) {
+            Intent serviceIntent = new Intent(getActivity(), LocationService.class);
+//        this.startService(serviceIntent);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                requireActivity().startForegroundService(serviceIntent);
+            } else {
+                requireActivity().startService(serviceIntent);
+            }
+        }
+    }
+
+    private boolean isLocationServiceRunning() {
+        ActivityManager manager = (ActivityManager) requireActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo hello : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if("com.example.localizationserdar.services.LocationService".equals(hello.service.getClassName())) {
+                Log.d(TAG, "isLocationServiceRunning: location service is already running.");
+                return true;
+            }
+        }
+        Log.d(TAG, "isLocationServiceRunning: location service is not running.");
+        return false;
+    }
+
+//    private boolean isServiceRunningInForeground(Context context, Class<?> serviceClass) {
+//        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+//        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+//            if (serviceClass.getName().equals(service.service.getClassName())) {
+//                if (service.foreground) {
+//                    return true;
+//                }
+//
+//            }
+//        }
+//        return false;
+//    }
+
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation: called.");
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -392,9 +432,9 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                         Log.d(TAG, exception.getLocalizedMessage().toString());
                     }
                 });
+                startLocationService();
             }
         });
-
     }
 
     private void addMapMarkers() {
@@ -508,7 +548,6 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.menu_profile:
                 Navigation.findNavController(requireView()).navigate(R.id.action_mainMenu_to_settings);
