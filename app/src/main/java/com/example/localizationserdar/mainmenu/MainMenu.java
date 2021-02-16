@@ -64,7 +64,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.maps.DirectionsApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.PendingResult;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.model.DirectionsResult;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -102,6 +106,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private ClusterManager<ClusterMarker> clusterManager;
     private ClusterManagerRenderer clusterManagerRenderer;
     private ArrayList<ClusterMarker> clusterMarkers = new ArrayList<>();
+    private GeoApiContext geoApiContext = null;
 
     public MainMenu() {
         // Required empty public constructor
@@ -167,6 +172,46 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
         binding.mvMap.onCreate(mapViewBundle);
         binding.mvMap.getMapAsync(this);
+
+        if (geoApiContext == null) {
+            geoApiContext = new GeoApiContext.Builder()
+                    .apiKey(getString(R.string.google_maps_api_key))
+                    .build();
+        }
+    }
+
+    private void calculateDirections(Marker marker){
+        Log.d(TAG, "calculateDirections: calculating directions.");
+
+        com.google.maps.model.LatLng destination = new com.google.maps.model.LatLng(
+                marker.getPosition().latitude,
+                marker.getPosition().longitude
+        );
+        DirectionsApiRequest directions = new DirectionsApiRequest(geoApiContext);
+
+        directions.alternatives(true);
+        directions.origin(
+                new com.google.maps.model.LatLng(
+                        user.liveLocation.getLatitude(),
+                        user.liveLocation.getLongitude()
+                )
+        );
+        Log.d(TAG, "calculateDirections: destination: " + destination.toString());
+        directions.destination(destination).setCallback(new PendingResult.Callback<DirectionsResult>() {
+            @Override
+            public void onResult(DirectionsResult result) {
+                Log.d(TAG, "onResult: routes: " + result.routes[0].toString());
+                Log.d(TAG, "onResult: duration: " + result.routes[0].legs[0].duration);
+                Log.d(TAG, "onResult: distance: " + result.routes[0].legs[0].distance);
+                Log.d(TAG, "onResult: geocodedWayPoints: " + result.geocodedWaypoints[0].toString());
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                Log.e(TAG, "onFailure: " + e.getMessage() );
+
+            }
+        });
     }
 
     private boolean checkMapServices() {
@@ -628,7 +673,10 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(marker.getSnippet())
                     .setCancelable(true)
-                    .setPositiveButton("Yes", (dialog, id) -> dialog.dismiss())
+                    .setPositiveButton("Yes", (dialog, id) -> {
+                        dialog.dismiss();
+                        calculateDirections(marker);
+                    })
                     .setNegativeButton("No", (dialog, id) -> dialog.cancel());
             final AlertDialog alert = builder.create();
             alert.show();
