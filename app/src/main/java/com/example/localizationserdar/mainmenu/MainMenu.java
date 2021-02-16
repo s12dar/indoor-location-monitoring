@@ -311,6 +311,26 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         return false;
     }
 
+    private void resetMap(){
+        if(mGoogleMap != null) {
+            mGoogleMap.clear();
+
+            if(clusterManager != null){
+                clusterManager.clearItems();
+            }
+
+            if (clusterMarkers.size() > 0) {
+                clusterMarkers.clear();
+                clusterMarkers = new ArrayList<>();
+            }
+
+            if(polyLinesData.size() > 0){
+                polyLinesData.clear();
+                polyLinesData = new ArrayList<>();
+            }
+        }
+    }
+
     private void addPolylinesToMap(final DirectionsResult result){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
@@ -431,6 +451,8 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                     });
             user = LocalizationLevel.getInstance().currentUser;
         }
+
+        binding.fabRefresh.setOnClickListener(v -> addMapMarkers());
 
         initGoogleMap(savedInstanceState);
 
@@ -562,6 +584,9 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
     private void addMapMarkers() {
         if (mGoogleMap != null) {
+
+            resetMap();
+
             if (clusterManager == null) {
                 clusterManager = new ClusterManager<>(getActivity().getApplicationContext(), mGoogleMap);
             }
