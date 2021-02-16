@@ -74,4 +74,8 @@ dependencies {
 
     //Google map utils for clustering
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
+
+    // Google Maps Services (needed for directions)
+    implementation 'com.google.maps:google-maps-services:0.2.9'
+    implementation 'org.slf4j:slf4j-nop:1.7.25'
 }
