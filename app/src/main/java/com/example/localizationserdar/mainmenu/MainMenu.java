@@ -56,6 +56,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.Timestamp;
@@ -87,7 +88,7 @@ import static com.example.localizationserdar.utils.Constants.STATUS_REJECTED;
 import static com.example.localizationserdar.utils.Constants.USER_STATUS;
 import static com.example.localizationserdar.utils.Constants.VERIFICATION_STATUS;
 
-public class MainMenu extends Fragment implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+public class MainMenu extends Fragment implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private MainMenuBinding binding;
     private ListenerRegistration modStatusListener;
@@ -602,6 +603,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         }
         map.setMyLocationEnabled(true);
         mGoogleMap = map;
+        mGoogleMap.setOnInfoWindowClickListener(this);
         setCameraViewForMap();
         addMapMarkers();
     }
@@ -616,5 +618,20 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     public void onLowMemory() {
         super.onLowMemory();
         binding.mvMap.onLowMemory();
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if (marker.getSnippet().equals("This is you")) {
+            marker.hideInfoWindow();
+        } else {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(marker.getSnippet())
+                    .setCancelable(true)
+                    .setPositiveButton("Yes", (dialog, id) -> dialog.dismiss())
+                    .setNegativeButton("No", (dialog, id) -> dialog.cancel());
+            final AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 }
