@@ -7,5 +7,6 @@
     <color name="colorWhite">#FFFF</color>
     <color name="colorDinner">#0d0c0a</color>
     <color name="colorWhiteSmoke">#F5F5F5</color>
+    <color name="colorGrey">#808080</color>
 
 </resources>
