@@ -60,6 +60,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -117,6 +118,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private ArrayList<ClusterMarker> clusterMarkers = new ArrayList<>();
     private GeoApiContext geoApiContext = null;
     private ArrayList<PolyLineData> polyLinesData = new ArrayList<>();
+    private Marker mSelectedMarker = null;
 
     public MainMenu() {
         // Required empty public constructor
@@ -308,6 +310,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                     polyLinesData = new ArrayList<>();
                 }
 
+                double duration = 9999999999.0;
                 for (DirectionsRoute route: result.routes){
                     Log.d(TAG, "run: leg: " + route.legs[0].toString());
                     List<com.google.maps.model.LatLng> decodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
@@ -328,6 +331,14 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                     polyline.setColor(ContextCompat.getColor(requireActivity(), R.color.colorGrey));
                     polyline.setClickable(true);
                     polyLinesData.add(new PolyLineData(polyline, route.legs[0]));
+
+                    double tempDuration = route.legs[0].duration.inSeconds;
+                    if (tempDuration < duration) {
+                        duration = tempDuration;
+                        onPolylineClick(polyline);
+                    }
+
+                    mSelectedMarker.setVisible(false);
                 }
             }
         });
@@ -725,6 +736,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             builder.setMessage(marker.getSnippet())
                     .setCancelable(true)
                     .setPositiveButton("Yes", (dialog, id) -> {
+                        mSelectedMarker = marker;
                         dialog.dismiss();
                         calculateDirections(marker);
                     })
@@ -736,11 +748,26 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
     @Override
     public void onPolylineClick(Polyline polyline) {
+        int index = 0;
         for (PolyLineData polylineData: polyLinesData) {
+            index++;
             Log.d(TAG, "onPolylineClick: toString: " + polylineData.toString());
             if(polyline.getId().equals(polylineData.getPolyline().getId())){
                 polylineData.getPolyline().setColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                 polylineData.getPolyline().setZIndex(1);
+
+                LatLng endLocation = new LatLng(
+                        polylineData.getLeg().endLocation.lat,
+                        polylineData.getLeg().endLocation.lng
+                );
+
+                Marker marker = mGoogleMap.addMarker(new MarkerOptions()
+                    .position(endLocation)
+                    .title("Trip: #"+index)
+                    .snippet("Duration: "+polylineData.getLeg().duration)
+                );
+
+                marker.showInfoWindow();
             }
             else {
                 polylineData.getPolyline().setColor(ContextCompat.getColor(getActivity(), R.color.colorGrey));
