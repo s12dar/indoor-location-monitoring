@@ -119,6 +119,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private GeoApiContext geoApiContext = null;
     private ArrayList<PolyLineData> polyLinesData = new ArrayList<>();
     private Marker mSelectedMarker = null;
+    private ArrayList<Marker> tripMarkers = new ArrayList<>();
 
     public MainMenu() {
         // Required empty public constructor
@@ -189,6 +190,20 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             geoApiContext = new GeoApiContext.Builder()
                     .apiKey(getString(R.string.google_maps_api_key))
                     .build();
+        }
+    }
+
+    private void removeTripMarkers() {
+        for (Marker marker: tripMarkers) {
+            marker.remove();
+        }
+    }
+
+    private void resetSelectedMarker() {
+        if (mSelectedMarker != null) {
+            mSelectedMarker.setVisible(true);
+            mSelectedMarker = null;
+            removeTripMarkers();
         }
     }
 
@@ -736,6 +751,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             builder.setMessage(marker.getSnippet())
                     .setCancelable(true)
                     .setPositiveButton("Yes", (dialog, id) -> {
+                        resetSelectedMarker();
                         mSelectedMarker = marker;
                         dialog.dismiss();
                         calculateDirections(marker);
@@ -768,6 +784,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 );
 
                 marker.showInfoWindow();
+                tripMarkers.add(marker);
             }
             else {
                 polylineData.getPolyline().setColor(ContextCompat.getColor(getActivity(), R.color.colorGrey));
