@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -770,21 +771,47 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        if (marker.getSnippet().equals("This is you")) {
-            marker.hideInfoWindow();
-        } else {
+        if(marker.getTitle().contains("Trip: #")){
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(marker.getSnippet())
+            builder.setMessage("Open Google Maps?")
                     .setCancelable(true)
                     .setPositiveButton("Yes", (dialog, id) -> {
-                        resetSelectedMarker();
-                        mSelectedMarker = marker;
-                        dialog.dismiss();
-                        calculateDirections(marker);
+                        String latitude = String.valueOf(marker.getPosition().latitude);
+                        String longitude = String.valueOf(marker.getPosition().longitude);
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+
+                        try{
+                            if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                startActivity(mapIntent);
+                            }
+                        }catch (NullPointerException e){
+                            Log.e(TAG, "onClick: NullPointerException: Couldn't open map." + e.getMessage() );
+                            Toast.makeText(getActivity(), "Couldn't open map", Toast.LENGTH_SHORT).show();
+                        }
+
                     })
                     .setNegativeButton("No", (dialog, id) -> dialog.cancel());
             final AlertDialog alert = builder.create();
             alert.show();
+        } else {
+            if (marker.getSnippet().equals("This is you")) {
+                marker.hideInfoWindow();
+            } else {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(marker.getSnippet())
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", (dialog, id) -> {
+                            resetSelectedMarker();
+                            mSelectedMarker = marker;
+                            dialog.dismiss();
+                            calculateDirections(marker);
+                        })
+                        .setNegativeButton("No", (dialog, id) -> dialog.cancel());
+                final AlertDialog alert = builder.create();
+                alert.show();
+            }
         }
     }
 
