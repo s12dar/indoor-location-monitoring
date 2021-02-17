@@ -6,7 +6,6 @@ import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -103,7 +102,7 @@ import static com.example.localizationserdar.utils.Constants.USER_STATUS;
 import static com.example.localizationserdar.utils.Constants.VERIFICATION_STATUS;
 
 public class MainMenu extends Fragment implements NavigationView.OnNavigationItemSelectedListener,
-        OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnPolylineClickListener {
+        OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnPolylineClickListener, LocalizationAdapter.LocalizationListRecyclerClickListener {
 
     private MainMenuBinding binding;
     private ListenerRegistration modStatusListener;
@@ -121,6 +120,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private ArrayList<PolyLineData> polyLinesData = new ArrayList<>();
     private Marker mSelectedMarker = null;
     private ArrayList<Marker> tripMarkers = new ArrayList<>();
+    private Marker markerForItemClick;
 
     public MainMenu() {
         // Required empty public constructor
@@ -208,7 +208,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         }
     }
 
-    private void calculateDirections(Marker marker){
+    private void calculateDirections(Marker marker) {
         Log.d(TAG, "calculateDirections: calculating directions.");
 
         com.google.maps.model.LatLng destination = new com.google.maps.model.LatLng(
@@ -254,11 +254,9 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         final AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
-                    }
+                .setPositiveButton("Yes", (dialog, id) -> {
+                    Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
                 });
         final AlertDialog alert = builder.create();
         alert.show();
@@ -333,50 +331,47 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     }
 
     private void addPolylinesToMap(final DirectionsResult result){
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "run: result routes: " + result.routes.length);
+        new Handler(Looper.getMainLooper()).post(() -> {
+            Log.d(TAG, "run: result routes: " + result.routes.length);
 
-                if (polyLinesData.size() > 0) {
-                    for (PolyLineData polyLineData: polyLinesData) {
-                        polyLineData.getPolyline().remove();
-                    }
-                    polyLinesData.clear();
-                    polyLinesData = new ArrayList<>();
+            if (polyLinesData.size() > 0) {
+                for (PolyLineData polyLineData: polyLinesData) {
+                    polyLineData.getPolyline().remove();
                 }
+                polyLinesData.clear();
+                polyLinesData = new ArrayList<>();
+            }
 
-                double duration = 9999999999.0;
-                for (DirectionsRoute route: result.routes){
-                    Log.d(TAG, "run: leg: " + route.legs[0].toString());
-                    List<com.google.maps.model.LatLng> decodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
+            double duration = 9999999999.0;
+            for (DirectionsRoute route: result.routes){
+                Log.d(TAG, "run: leg: " + route.legs[0].toString());
+                List<com.google.maps.model.LatLng> decodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
 
-                    List<LatLng> newDecodedPath = new ArrayList<>();
+                List<LatLng> newDecodedPath = new ArrayList<>();
 
-                    // This loops through all the LatLng coordinates of ONE polyline.
-                    for(com.google.maps.model.LatLng latLng: decodedPath){
+                // This loops through all the LatLng coordinates of ONE polyline.
+                for(com.google.maps.model.LatLng latLng: decodedPath){
 
 //                        Log.d(TAG, "run: latlng: " + latLng.toString());
 
-                        newDecodedPath.add(new LatLng(
-                                latLng.lat,
-                                latLng.lng
-                        ));
-                    }
-                    Polyline polyline = mGoogleMap.addPolyline(new PolylineOptions().addAll(newDecodedPath));
-                    polyline.setColor(ContextCompat.getColor(requireActivity(), R.color.colorGrey));
-                    polyline.setClickable(true);
-                    polyLinesData.add(new PolyLineData(polyline, route.legs[0]));
-
-                    double tempDuration = route.legs[0].duration.inSeconds;
-                    if (tempDuration < duration) {
-                        duration = tempDuration;
-                        onPolylineClick(polyline);
-                        zoomRoute(polyline.getPoints());
-                    }
-
-                    mSelectedMarker.setVisible(false);
+                    newDecodedPath.add(new LatLng(
+                            latLng.lat,
+                            latLng.lng
+                    ));
                 }
+                Polyline polyline = mGoogleMap.addPolyline(new PolylineOptions().addAll(newDecodedPath));
+                polyline.setColor(ContextCompat.getColor(requireActivity(), R.color.colorGrey));
+                polyline.setClickable(true);
+                polyLinesData.add(new PolyLineData(polyline, route.legs[0]));
+
+                double tempDuration = route.legs[0].duration.inSeconds;
+                if (tempDuration < duration) {
+                    duration = tempDuration;
+                    onPolylineClick(polyline);
+                    zoomRoute(polyline.getPoints());
+                }
+
+                mSelectedMarker.setVisible(false);
             }
         });
     }
@@ -480,7 +475,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             LocalizationLevel.getInstance().allBeacons = new LinkedList<>();
         }
 
-        LocalizationAdapter localizationAdapter = new LocalizationAdapter(getActivity(), LocalizationLevel.getInstance().allBeacons);
+        LocalizationAdapter localizationAdapter = new LocalizationAdapter(getActivity(), LocalizationLevel.getInstance().allBeacons, this);
         binding.bottomSheet.rvBottomSheet.setAdapter(localizationAdapter);
 
         BottomSheetBehavior<androidx.constraintlayout.widget.ConstraintLayout> behavior = BottomSheetBehavior.from(binding.bottomSheet.bSh);
@@ -520,7 +515,6 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private void startLocationService() {
         if(!isLocationServiceRunning()) {
             Intent serviceIntent = new Intent(getActivity(), LocationService.class);
-//        this.startService(serviceIntent);
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 requireActivity().startForegroundService(serviceIntent);
@@ -541,19 +535,6 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         Log.d(TAG, "isLocationServiceRunning: location service is not running.");
         return false;
     }
-
-//    private boolean isServiceRunningInForeground(Context context, Class<?> serviceClass) {
-//        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-//        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-//            if (serviceClass.getName().equals(service.service.getClassName())) {
-//                if (service.foreground) {
-//                    return true;
-//                }
-//
-//            }
-//        }
-//        return false;
-//    }
 
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation: called.");
@@ -605,7 +586,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 Log.d(TAG, "addMarkersLocation: location: "+beacon.beaconLocation.toString());
 
                 try {
-                    String snippet = "Determine route to " + beacon.beaconName+"?";
+                    String snippet = "Do you want to determine route to " + beacon.beaconName+"?";
                     int avatar = R.drawable.oh_hey;
                     ClusterMarker clusterMarker = new ClusterMarker(
                             new LatLng(beacon.beaconLocation.getLatitude(), beacon.beaconLocation.getLongitude()),
@@ -771,9 +752,9 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        if(marker.getTitle().contains("Trip: #")){
+        if(marker.getTitle().contains("Trip: #")) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Open Google Maps?")
+            builder.setMessage("Do you want to navigate to localization via Google Maps?")
                     .setCancelable(true)
                     .setPositiveButton("Yes", (dialog, id) -> {
                         String latitude = String.valueOf(marker.getPosition().latitude);
@@ -786,11 +767,10 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                             if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                                 startActivity(mapIntent);
                             }
-                        }catch (NullPointerException e){
+                        } catch (NullPointerException e) {
                             Log.e(TAG, "onClick: NullPointerException: Couldn't open map." + e.getMessage() );
                             Toast.makeText(getActivity(), "Couldn't open map", Toast.LENGTH_SHORT).show();
                         }
-
                     })
                     .setNegativeButton("No", (dialog, id) -> dialog.cancel());
             final AlertDialog alert = builder.create();
@@ -862,5 +842,54 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 polylineData.getPolyline().setZIndex(0);
             }
         }
+    }
+
+    @Override
+    public void onUserClicked(int position) {
+        Beacon beacon = LocalizationLevel.getInstance().allBeacons.get(position);
+        Log.d(TAG, "onUserSelected: selected a user: " + beacon.beaconName);
+
+        final AlertDialog.Builder builder =  new AlertDialog.Builder(getActivity());
+        builder.setMessage("Do you want to determine route to "+beacon.beaconName+"?");
+
+        builder.setPositiveButton("YES", (dialog, which) -> {
+            com.google.maps.model.LatLng destination = new com.google.maps.model.LatLng(
+                    LocalizationLevel.getInstance().allBeacons.get(position).beaconLocation.getLatitude(),
+                    LocalizationLevel.getInstance().allBeacons.get(position).beaconLocation.getLongitude()
+            );
+            DirectionsApiRequest directions = new DirectionsApiRequest(geoApiContext);
+
+            directions.alternatives(true);
+            directions.origin(
+                    new com.google.maps.model.LatLng(
+                            user.liveLocation.getLatitude(),
+                            user.liveLocation.getLongitude()
+                    )
+            );
+            Log.d(TAG, "calculateDirections: destination: " + destination.toString());
+            directions.destination(destination).setCallback(new PendingResult.Callback<DirectionsResult>() {
+                @Override
+                public void onResult(DirectionsResult result) {
+                    Log.d(TAG, "onResult: routes: " + result.routes[0].toString());
+                    Log.d(TAG, "onResult: duration: " + result.routes[0].legs[0].duration);
+                    Log.d(TAG, "onResult: distance: " + result.routes[0].legs[0].distance);
+                    Log.d(TAG, "onResult: geocodedWayPoints: " + result.geocodedWaypoints[0].toString());
+                    addPolylinesToMap(result);
+                }
+
+                @Override
+                public void onFailure(Throwable e) {
+                    Log.e(TAG, "onFailure: " + e.getMessage() );
+
+                }
+            });
+        });
+
+        builder.setNegativeButton("NO", ((dialog, which) -> {
+            dialog.cancel();
+        }));
+        final AlertDialog alert = builder.create();
+        alert.show();
+
     }
 }

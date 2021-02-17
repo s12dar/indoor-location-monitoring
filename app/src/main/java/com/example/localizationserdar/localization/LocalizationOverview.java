@@ -16,7 +16,7 @@ import com.example.localizationserdar.LocalizationLevel;
 import com.example.localizationserdar.databinding.LocalizationOverviewBinding;
 import com.example.localizationserdar.utils.OnboardingUtils;
 
-public class LocalizationOverview extends Fragment {
+public class LocalizationOverview extends Fragment implements LocalizationAdapter.LocalizationListRecyclerClickListener {
 
     private LocalizationOverviewBinding binding;
 
@@ -54,7 +54,7 @@ public class LocalizationOverview extends Fragment {
         binding.recyclerView.setLayoutManager(linearLayoutManager);
 
         // Initialize adapter
-        LocalizationAdapter localizationAdapter = new LocalizationAdapter(getActivity(), LocalizationLevel.getInstance().allBeacons);
+        LocalizationAdapter localizationAdapter = new LocalizationAdapter(getActivity(), LocalizationLevel.getInstance().allBeacons, this);
 
         binding.recyclerView.setAdapter(localizationAdapter);
 
@@ -70,6 +70,11 @@ public class LocalizationOverview extends Fragment {
                 return false;
             }
         });
+
+    }
+
+    @Override
+    public void onUserClicked(int position) {
 
     }
 }

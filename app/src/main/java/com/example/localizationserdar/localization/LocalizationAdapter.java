@@ -1,6 +1,5 @@
 package com.example.localizationserdar.localization;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +24,14 @@ public class LocalizationAdapter extends RecyclerView.Adapter<LocalizationAdapte
     private List<Beacon> beaconList;
     private List<Beacon> allBeaconsList;
     private LocalizationItemBinding binding;
+    private LocalizationListRecyclerClickListener mClickListener;
 
 
-    public LocalizationAdapter(Context context, List<Beacon> beaconList) {
+    public LocalizationAdapter(Context context, List<Beacon> beaconList, LocalizationListRecyclerClickListener clickListener) {
         this.context = context;
         this.beaconList = beaconList;
         this.allBeaconsList = new ArrayList<>(beaconList);
+        this.mClickListener = clickListener;
     }
 
     @NonNull
@@ -41,7 +42,7 @@ public class LocalizationAdapter extends RecyclerView.Adapter<LocalizationAdapte
         LayoutInflater inflater = LayoutInflater.from(context);
         binding = LocalizationItemBinding.inflate(inflater, parent, false);
         View view = binding.getRoot();
-        return new LocalizationViewHolder(view);
+        return new LocalizationViewHolder(view, mClickListener);
     }
 
     @Override
@@ -99,36 +100,28 @@ public class LocalizationAdapter extends RecyclerView.Adapter<LocalizationAdapte
         }
     };
 
-    public class LocalizationViewHolder extends RecyclerView.ViewHolder {
+    public class LocalizationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView tvBeaconName, tvBeaconDesc;
+        LocalizationListRecyclerClickListener localizationListRecyclerClickListener;
 
-        public LocalizationViewHolder(@NonNull View itemView) {
+        public LocalizationViewHolder(@NonNull View itemView, LocalizationListRecyclerClickListener clickListener) {
             super(itemView);
             tvBeaconName = binding.tvTitleRv;
             tvBeaconDesc = binding.tvSubtitle;
+            localizationListRecyclerClickListener = clickListener;
 
-            itemView.setOnClickListener(v ->  {
-                int position = getAdapterPosition();
+            itemView.setOnClickListener(this);
 
-                if (position != RecyclerView.NO_POSITION) {
-                    Beacon clickedBeacon = allBeaconsList.get(position);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Do you want to navigate to: ");
-                    builder.setMessage(clickedBeacon.beaconName+"?");
-
-                    builder.setNegativeButton("NO", ((dialog, which) -> {
-
-                    }));
-
-                    builder.setPositiveButton("YES", ((dialog, which) -> {
-
-                    }));
-
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
-            });
         }
+
+        @Override
+        public void onClick(View v) {
+            localizationListRecyclerClickListener.onUserClicked(getAdapterPosition());
+        }
+    }
+
+    public interface LocalizationListRecyclerClickListener {
+        void onUserClicked(int position);
     }
 }
