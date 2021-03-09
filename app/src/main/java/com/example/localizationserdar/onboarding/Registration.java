@@ -1,5 +1,6 @@
 package com.example.localizationserdar.onboarding;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,15 +17,18 @@ import com.example.localizationserdar.LocalizationLevel;
 import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.RegistrationBinding;
 import com.example.localizationserdar.datamanager.DataManager;
-import com.example.localizationserdar.datamodels.Beacon;
 import com.example.localizationserdar.datamodels.User;
 import com.example.localizationserdar.utils.OnboardingUtils;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Date;
+import java.util.LinkedList;
 
+import static com.example.localizationserdar.utils.Constants.INITIAL_LAT;
+import static com.example.localizationserdar.utils.Constants.INITIAL_LNG;
 import static com.example.localizationserdar.utils.Constants.NEW_USER;
 import static com.example.localizationserdar.utils.Constants.STATUS_PENDING;
 import static com.example.localizationserdar.utils.Constants.USER_STATUS;
@@ -103,66 +107,80 @@ public class Registration extends Fragment {
     }
 
     private void createAccount(String email, String password, String firstName, String lastName, String phoneNumber) {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        binding.progressBar.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        //Load data to firestore
-                        User user;
-                        if (LocalizationLevel.getInstance().currentUser == null) {
-
-                            user = new User();
-                            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                                user.userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            }
-                            user.firstName = firstName;
-                            user.lastName = lastName;
-                            user.phoneNumber = phoneNumber;
-                            user.email = email;
-                            user.createdAt = new Timestamp(new Date());
-                            user.verificationStatus = STATUS_PENDING;
-
-                            Beacon beacon = new Beacon();
-
-                            beacon.beaconName = "Hello";
-                            beacon.beaconDesc = "Hahahha";
-                            beacon.beaconId = "123";
-
-                            user.beacons.add(beacon);
-
-                        } else {
-                            user = LocalizationLevel.getInstance().currentUser;
-                        }
-
-                        Log.d("The user info is here", user.userId + user.firstName + user.lastName + user.email + user.phoneNumber);
-
-                        DataManager.getInstance().createUser(user, (success, exception) -> {
-                            if (success != null && success) {
-                                try {
-                                    LocalizationLevel.getInstance().currentUser = user;
-                                    Log.d(TAG, "All is good" + LocalizationLevel.getInstance().currentUser.firstName);
-
-                                } catch (NullPointerException e) {
-                                    Log.d("The error is me: ",e+"");
+        if (email.contains("@gmail.com")) {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            //Load data to firestore
+                            User user;
+                            if (LocalizationLevel.getInstance().currentUser == null) {
+                                user = new User();
+                                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                                    user.userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                 }
+
+                                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                                firebaseUser.sendEmailVerification().addOnSuccessListener(unused -> Log.d(TAG, "Verification link is successfully sent to the user"))
+                                        .addOnFailureListener(e -> Log.e(TAG, "onFailure: " + e.toString()));
+
+                                user.firstName = firstName;
+                                user.lastName = lastName;
+                                user.phoneNumber = phoneNumber;
+                                user.email = email;
+                                user.createdAt = new Timestamp(new Date());
+                                user.verificationStatus = STATUS_PENDING;
+                                user.liveLocation = new GeoPoint(INITIAL_LAT, INITIAL_LNG);
+
+                                LocalizationLevel.getInstance().currentUser = user;
                             } else {
-                                Log.d(TAG, "Hey, we can't load the data in firestore"+exception);
+                                user = LocalizationLevel.getInstance().currentUser;
                             }
-                        });
 
-//                        if (LocalizationLevel.getInstance().currentUser == null) {
-//                            LocalizationLevel.getInstance().currentUser = user;
-//                        }
-                        Bundle bundle = new Bundle();
-                        bundle.putString(USER_STATUS, NEW_USER);
-                        Navigation.findNavController(requireView()).navigate(R.id.action_registration_to_mainMenu);
-                    } else {
-                        Toast.makeText(getActivity(), "Registration is failed", Toast.LENGTH_SHORT).show();
-                    }
-                    binding.progressBar.setVisibility(View.INVISIBLE);
-        });
+                            Log.d("The user info is here", user.userId + user.firstName + user.lastName + user.email + user.phoneNumber);
 
+                            DataManager.getInstance().createUser(user, (success, exception) -> {
+                                if (success != null && success) {
+                                    try {
+                                        LocalizationLevel.getInstance().currentUser = user;
+//                                        Toast.makeText(getContext(), "All is good in account creation", Toast.LENGTH_SHORT).show();
+                                        Log.d(TAG, "All is good" + LocalizationLevel.getInstance().currentUser.firstName);
+                                        LocalizationLevel.getInstance().currentUser = user;
+
+                                        DataManager.getInstance().getBeacons((beacons, exception1) -> {
+                                            if (beacons != null) {
+                                                LocalizationLevel.getInstance().allBeacons = beacons;
+                                            } else {
+                                                LocalizationLevel.getInstance().allBeacons = new LinkedList<>();
+                                            }
+                                        });
+
+                                    } catch (NullPointerException e) {
+                                        Log.d("The error is me: ",e+"");
+//                                        Toast.makeText(getContext(), "All is not good in account creation", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+//                                    Toast.makeText(getContext(), "Hey, we can't load the data in firestore", Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG, "Hey, we can't load the data in firestore"+exception);
+                                }
+                            });
+                            Bundle bundle = new Bundle();
+                            bundle.putString(USER_STATUS, NEW_USER);
+                            Navigation.findNavController(requireView()).navigate(R.id.action_registration_to_mainMenu);
+                        } else {
+                            Toast.makeText(getActivity(), "Registration is failed", Toast.LENGTH_SHORT).show();
+                        }
+                        binding.progressBar.setVisibility(View.INVISIBLE);
+                    });
+        } else {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Oops!");
+            builder.setMessage("Please use email address provided by our University.")
+                    .setCancelable(true)
+                    .setNegativeButton("ok", (dialog, id) -> dialog.cancel());
+            final AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 }

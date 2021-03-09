@@ -67,7 +67,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.maps.DirectionsApiRequest;
@@ -85,21 +85,22 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.example.localizationserdar.utils.Constants.COLLECTION_USERS;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_AI_LAB;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_CANTINA;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_LIBRARY;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_MEETING_ROOM;
 import static com.example.localizationserdar.utils.Constants.EMPTY_STRING;
 import static com.example.localizationserdar.utils.Constants.ERROR_DIALOG_REQUEST;
 import static com.example.localizationserdar.utils.Constants.EXISTING_USER;
+import static com.example.localizationserdar.utils.Constants.INITIAL_LAT;
+import static com.example.localizationserdar.utils.Constants.INITIAL_LNG;
 import static com.example.localizationserdar.utils.Constants.MAPVIEW_BUNDLE_KEY;
 import static com.example.localizationserdar.utils.Constants.NOT_FIRST_TIME;
 import static com.example.localizationserdar.utils.Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
 import static com.example.localizationserdar.utils.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 import static com.example.localizationserdar.utils.Constants.REWARD_COUNT;
 import static com.example.localizationserdar.utils.Constants.SP_FILES;
-import static com.example.localizationserdar.utils.Constants.STATUS_ACCEPTED;
-import static com.example.localizationserdar.utils.Constants.STATUS_PENDING;
-import static com.example.localizationserdar.utils.Constants.STATUS_REJECTED;
 import static com.example.localizationserdar.utils.Constants.USER_STATUS;
-import static com.example.localizationserdar.utils.Constants.VERIFICATION_STATUS;
 
 public class MainMenu extends Fragment implements NavigationView.OnNavigationItemSelectedListener,
         OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnPolylineClickListener, LocalizationAdapter.LocalizationListRecyclerClickListener {
@@ -129,7 +130,12 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        user = LocalizationLevel.getInstance().currentUser;
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            firebaseUser.reload();
+        }
+//        manageModerationStatus();
+          user = LocalizationLevel.getInstance().currentUser;
     }
 
     @Override
@@ -151,15 +157,20 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     @Override
     public void onResume() {
         super.onResume();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         binding.mvMap.onResume();
-        if (checkMapServices()) {
-            if (mLocationPermissionGranted) {
-                Log.d(TAG, "I have a location permissions");
-                getLastKnownLocation();
-            } else {
-                getLocationPermission();
+        if (firebaseUser != null && firebaseUser.isEmailVerified()) {
+            if (checkMapServices()) {
+                if (mLocationPermissionGranted) {
+                    Log.d(TAG, "I have a location permissions");
+                    getLastKnownLocation();
+                } else {
+                    getLocationPermission();
+                }
             }
         }
+        user = LocalizationLevel.getInstance().currentUser;
     }
 
     @Override
@@ -350,7 +361,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 List<LatLng> newDecodedPath = new ArrayList<>();
 
                 // This loops through all the LatLng coordinates of ONE polyline.
-                for(com.google.maps.model.LatLng latLng: decodedPath){
+                for (com.google.maps.model.LatLng latLng: decodedPath) {
 
 //                        Log.d(TAG, "run: latlng: " + latLng.toString());
 
@@ -452,7 +463,6 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
         initGoogleMap(savedInstanceState);
 
-        user = LocalizationLevel.getInstance().currentUser;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         NavigationView navigationView = requireView().findViewById(R.id.nav_view);
@@ -460,9 +470,6 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         setNavDrawer(toolbar);
-
-        //Setting the Greetings message
-        setGreetingsText(user);
 
         //Display moderation overlay (in case pending/declined)
         manageModerationStatus();
@@ -510,6 +517,8 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         assert binding.bottomSheet.fabScan != null;
         binding.bottomSheet.fabScan.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_mainMenu_to_qrScanner));
 
+        //Setting the Greetings message
+        setGreetingsText(user);
     }
 
     private void startLocationService() {
@@ -548,6 +557,9 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 Log.d(TAG, "onComplete: latitude: " + geoPoint.getLatitude());
                 Log.d(TAG, "onComplete: longitude: " + geoPoint.getLongitude());
 
+                if (user.liveLocation == null) {
+                    user.liveLocation = new GeoPoint(1, 1);
+                }
                 user.liveLocation = geoPoint;
                 user.lastLocationUpdatedAt = new Timestamp(new Date());
 
@@ -586,8 +598,22 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                 Log.d(TAG, "addMarkersLocation: location: "+beacon.beaconLocation.toString());
 
                 try {
-                    String snippet = "Do you want to determine route to " + beacon.beaconName+"?";
                     int avatar = R.drawable.oh_hey;
+                    String snippet = "Do you want to determine route to " + beacon.beaconName+"?";
+                    switch (beacon.beaconName) {
+                        case BEACON_IN_MEETING_ROOM:
+                            avatar = R.drawable.ic_meeting;
+                            break;
+                        case BEACON_IN_CANTINA:
+                            avatar = R.drawable.ic_cantina;
+                            break;
+                        case BEACON_IN_LIBRARY:
+                            avatar = R.drawable.ic_lib;
+                            break;
+                        case BEACON_IN_AI_LAB:
+                            avatar = R.drawable.ic_lab;
+                            break;
+                    }
                     ClusterMarker clusterMarker = new ClusterMarker(
                             new LatLng(beacon.beaconLocation.getLatitude(), beacon.beaconLocation.getLongitude()),
                             beacon.beaconName,
@@ -611,50 +637,48 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         toggle.syncState();
     }
 
-    private void showVerificationStatusOverlay(Boolean booleanType) {
-        TutoShowcase verificationOverlay = TutoShowcase.from(requireActivity());
-        if (booleanType) {
-            verificationOverlay.setContentView(R.layout.verification_status_overlay)
-                    .onClickContentView(R.id.container_overlay_complete, null)
-                    .show();
-        } else {
-            verificationOverlay.setContentView(R.layout.verification_status_overlay)
-                    .dismiss();
-        }
-    }
-
     private void manageModerationStatus() {
-        modStatusListener = FirebaseFirestore.getInstance().collection(COLLECTION_USERS).document(user.userId)
-                .addSnapshotListener((documentSnapshot, error) -> {
-                    if (error != null) {
-                        Log.d(TAG, error.toString());
-                        return;
-                    }
-                    if (documentSnapshot != null && documentSnapshot.exists()) {
-                        user.verificationStatus = documentSnapshot.getString(VERIFICATION_STATUS);
-                        if (user.verificationStatus != null) {
-                            switch (user.verificationStatus) {
-                                case STATUS_REJECTED:
-                                case STATUS_PENDING:
-                                    showVerificationStatusOverlay(true);
-                                    binding.bottomSheet.bSh.setVisibility(View.GONE);
-                                    break;
-                                case STATUS_ACCEPTED:
-                                    showVerificationStatusOverlay(false);
-                                    binding.bottomSheet.bSh.setVisibility(View.VISIBLE);
-                                    break;
-
-                            }
-                        }
-                    }
-                });
+        TutoShowcase verificationOverlay = TutoShowcase.from(requireActivity());
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            firebaseUser.reload();
+            if (!firebaseUser.isEmailVerified()) {
+                verificationOverlay.setContentView(R.layout.verification_status_overlay)
+                        .onClickContentView(R.id.container_overlay_complete, null)
+                        .show();
+            } else {
+                verificationOverlay.dismiss();
+        }}
+         //        modStatusListener = FirebaseFirestore.getInstance().collection(COLLECTION_USERS).document(user.userId)
+//                .addSnapshotListener((documentSnapshot, error) -> {
+//                    if (error != null) {
+//                        Log.d(TAG, error.toString());
+//                        return;
+//                    }
+//                    if (documentSnapshot != null && documentSnapshot.exists()) {
+//                        user.verificationStatus = documentSnapshot.getString(VERIFICATION_STATUS);
+//                        if (user.verificationStatus != null) {
+//                            switch (user.verificationStatus) {
+//                                case STATUS_REJECTED:
+//                                case STATUS_PENDING:
+//                                    showVerificationStatusOverlay(true);
+//                                    binding.bottomSheet.bSh.setVisibility(View.GONE);
+//                                    break;
+//                                case STATUS_ACCEPTED:
+//                                    showVerificationStatusOverlay(false);
+//                                    binding.bottomSheet.bSh.setVisibility(View.VISIBLE);
+//                                    break;
+//
+//                            }
+//                        }
+//                    }
+//                });
     }
 
     private void setGreetingsText(User user) {
         View header = binding.navView.getHeaderView(0);
         TextView tvGreetings = header.findViewById(R.id.tv_morning);
         TextView tvName = header.findViewById(R.id.tv_name);
-
         tvName.setText(user.firstName);
 
         Calendar rightNow = Calendar.getInstance();
@@ -707,6 +731,9 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
     private void setCameraViewForMap() {
         //Overall map view window: .2 * .2 = .04;
+        if (user.liveLocation == null) {
+            user.liveLocation = new GeoPoint(INITIAL_LAT, INITIAL_LNG);
+        }
         GeoPoint geoPoint = new GeoPoint(user.liveLocation.getLatitude(), user.liveLocation.getLongitude());
 
         double bottomBoundary = geoPoint.getLatitude() - .1;
@@ -754,7 +781,8 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     public void onInfoWindowClick(Marker marker) {
         if(marker.getTitle().contains("Trip: #")) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Do you want to navigate to localization via Google Maps?")
+            builder.setTitle("Navigate");
+            builder.setMessage("Do you want to navigate to the location via Google Maps?")
                     .setCancelable(true)
                     .setPositiveButton("Yes", (dialog, id) -> {
                         String latitude = String.valueOf(marker.getPosition().latitude);
@@ -850,6 +878,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         Log.d(TAG, "onUserSelected: selected a user: " + beacon.beaconName);
 
         final AlertDialog.Builder builder =  new AlertDialog.Builder(getActivity());
+        builder.setTitle("Route drawing");
         builder.setMessage("Do you want to determine route to "+beacon.beaconName+"?");
 
         builder.setPositiveButton("YES", (dialog, which) -> {

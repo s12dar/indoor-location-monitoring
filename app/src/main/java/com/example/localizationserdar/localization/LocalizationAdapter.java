@@ -6,17 +6,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.LocalizationItemBinding;
 import com.example.localizationserdar.datamodels.Beacon;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_AI_LAB;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_CANTINA;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_LIBRARY;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_MEETING_ROOM;
 
 public class LocalizationAdapter extends RecyclerView.Adapter<LocalizationAdapter.LocalizationViewHolder> implements Filterable {
 
@@ -51,6 +59,20 @@ public class LocalizationAdapter extends RecyclerView.Adapter<LocalizationAdapte
         Beacon beacon = beaconList.get(position);
         holder.tvBeaconName.setText(beacon.beaconName);
         holder.tvBeaconDesc.setText(beacon.beaconDesc);
+        switch (beacon.beaconName) {
+            case BEACON_IN_MEETING_ROOM:
+                holder.ivBeacon.setImageDrawable(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_meeting));
+                break;
+            case BEACON_IN_AI_LAB:
+                holder.ivBeacon.setImageDrawable(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_lab));
+                break;
+            case BEACON_IN_CANTINA:
+                holder.ivBeacon.setImageDrawable(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_cantina));
+                break;
+            case BEACON_IN_LIBRARY:
+                holder.ivBeacon.setImageDrawable(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_lib));
+                break;
+        }
     }
 
     @Override
@@ -103,12 +125,14 @@ public class LocalizationAdapter extends RecyclerView.Adapter<LocalizationAdapte
     public class LocalizationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView tvBeaconName, tvBeaconDesc;
+        ImageView ivBeacon;
         LocalizationListRecyclerClickListener localizationListRecyclerClickListener;
 
         public LocalizationViewHolder(@NonNull View itemView, LocalizationListRecyclerClickListener clickListener) {
             super(itemView);
             tvBeaconName = binding.tvTitleRv;
             tvBeaconDesc = binding.tvSubtitle;
+            ivBeacon = binding.ivBeacon;
             localizationListRecyclerClickListener = clickListener;
 
             itemView.setOnClickListener(this);

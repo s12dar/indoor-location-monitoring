@@ -17,6 +17,8 @@ public class Constants {
     public static final String STATUS_ACCEPTED = "accepted";
     public static final String USER_LIVE_LOCATION = "liveLocation";
     public static final String LAST_LOCATION_UPDATED_AT = "lastLocationUpdatedAt";
+    public static final double INITIAL_LAT = 44.458041;
+    public static final double INITIAL_LNG = 26.120479;
 
     /**
      * BEACON DATA
@@ -59,4 +61,13 @@ public class Constants {
      * GOOGLE MAPS
      */
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+
+    /**
+     * BEACON NAMES
+     */
+    public static final String BEACON_IN_MEETING_ROOM = "Meeting Room";
+    public static final String BEACON_IN_AI_LAB = "AI Laboratory";
+    public static final String BEACON_IN_LIBRARY = "Library";
+    public static final String BEACON_IN_CANTINA = "Cantina";
+
 }

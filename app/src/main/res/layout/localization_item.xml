@@ -25,21 +25,17 @@
             android:layout_height="match_parent"
             android:padding="8dp">
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/scan_item_pic"
+            <ImageView
+                android:id="@+id/iv_beacon"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_margin="8dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_sunflower"
-                app:layout_constraintDimensionRatio="1:1"
+                android:src="@drawable/ic_meeting"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintWidth_default="percent"
-                app:layout_constraintWidth_percent=".07"
-                app:riv_corner_radius="60dp"
-                app:riv_oval="true" />
+                app:layout_constraintWidth_percent=".07"/>
 
             <TextView
                 android:id="@+id/tv_title_rv"
@@ -48,7 +44,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@+id/scan_item_pic"
+                app:layout_constraintStart_toEndOf="@+id/iv_beacon"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Hello" />
 
@@ -58,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintStart_toEndOf="@+id/scan_item_pic"
+                app:layout_constraintStart_toEndOf="@+id/iv_beacon"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title_rv"
                 tools:text="Hello, my name is Serdar" />
 

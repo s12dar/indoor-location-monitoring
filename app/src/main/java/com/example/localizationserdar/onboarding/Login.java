@@ -19,6 +19,8 @@ import com.example.localizationserdar.datamanager.DataManager;
 import com.example.localizationserdar.utils.OnboardingUtils;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.LinkedList;
+
 import static com.example.localizationserdar.utils.Constants.EXISTING_USER;
 import static com.example.localizationserdar.utils.Constants.USER_STATUS;
 
@@ -84,20 +86,26 @@ public class Login extends Fragment {
         binding.progressBar.setVisibility(View.VISIBLE);
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Bundle bundle = new Bundle();
                         bundle.putString(USER_STATUS, EXISTING_USER);
-                        Navigation.findNavController(requireView()).navigate(R.id.action_login_to_mainMenu, bundle);
                         DataManager.getInstance().getCurrentUser(
                                 (user, exception) -> {
                                     if (user != null) {
+                                        Toast.makeText(getContext(), "Serdar all is good2", Toast.LENGTH_SHORT).show();
                                         LocalizationLevel.getInstance().currentUser = user;
                                     }
-                                }
-                        );
-                    }
-                    else {
-                        Toast.makeText(getActivity(), "Error! "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    DataManager.getInstance().getBeacons((beacons, exception1) -> {
+                                        if (beacons != null) {
+                                            LocalizationLevel.getInstance().allBeacons = beacons;
+                                        } else {
+                                            LocalizationLevel.getInstance().allBeacons = new LinkedList<>();
+                                        }
+                                    });
+                                });
+                        Navigation.findNavController(Login.this.requireView()).navigate(R.id.action_login_to_mainMenu, bundle);
+                    } else {
+                        Toast.makeText(Login.this.getActivity(), "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                     binding.progressBar.setVisibility(View.INVISIBLE);
                 });

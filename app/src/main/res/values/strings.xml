@@ -59,9 +59,9 @@
 
     <!--VERIFICATION STATUS OVERLAY-->
     <string name="txt_okay_i_understand">OK, I understand</string>
-    <string name="txt_moderation_status">Moderation status</string>
-    <string name="txt_moderation_status_content">Hello. Currently we are investigating your profile.\n\nWe will give you an access to use the platform if you are student at University Politehnica of Bucharest.</string>
-    <string name="txt_thank_you">Thank you for your patience!</string>
+    <string name="txt_moderation_status">Verification status</string>
+    <string name="txt_moderation_status_content">Hello. We just have sent a verification email to your email address.\n\nPlease, verify your email address to have an access to our platform.</string>
+    <string name="txt_thank_you">Have a good day!</string>
 
     <!--SEARCH WIDGET-->
     <string name="hint_search">Search Xerox, coffee machine…</string>

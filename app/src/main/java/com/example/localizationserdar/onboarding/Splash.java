@@ -12,6 +12,7 @@ import com.example.localizationserdar.LocalizationLevel;
 import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.SplashBinding;
 import com.example.localizationserdar.datamanager.DataManager;
+import com.example.localizationserdar.utils.OnboardingUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -32,8 +33,6 @@ public class Splash extends Fragment {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-
-//        ((OnboardingUtils) requireContext()).hideToolbar();
     }
 
     @Override
@@ -46,6 +45,7 @@ public class Splash extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = SplashBinding.inflate(inflater, container, false);
+        ((OnboardingUtils)requireActivity()).hideToolbar();
         return binding.getRoot();
     }
 
