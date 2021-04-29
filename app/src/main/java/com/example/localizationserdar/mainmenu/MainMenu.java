@@ -459,6 +459,8 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             user = LocalizationLevel.getInstance().currentUser;
         }
 
+        binding.bottomSheet.tvNiceToSeeYou.setText("Hi " + user.firstName + ". Nice to see you again!");
+
         binding.fabRefresh.setOnClickListener(v -> addMapMarkers());
 
         initGoogleMap(savedInstanceState);
