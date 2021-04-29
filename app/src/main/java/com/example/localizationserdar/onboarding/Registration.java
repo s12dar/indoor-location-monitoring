@@ -30,7 +30,6 @@ import java.util.LinkedList;
 import static com.example.localizationserdar.utils.Constants.INITIAL_LAT;
 import static com.example.localizationserdar.utils.Constants.INITIAL_LNG;
 import static com.example.localizationserdar.utils.Constants.NEW_USER;
-import static com.example.localizationserdar.utils.Constants.STATUS_PENDING;
 import static com.example.localizationserdar.utils.Constants.USER_STATUS;
 
 
@@ -130,7 +129,7 @@ public class Registration extends Fragment {
                                 user.phoneNumber = phoneNumber;
                                 user.email = email;
                                 user.createdAt = new Timestamp(new Date());
-                                user.verificationStatus = STATUS_PENDING;
+                                user.isVerified = false;
                                 user.liveLocation = new GeoPoint(INITIAL_LAT, INITIAL_LNG);
 
                                 LocalizationLevel.getInstance().currentUser = user;

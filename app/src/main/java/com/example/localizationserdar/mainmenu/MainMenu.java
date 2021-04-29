@@ -647,6 +647,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                         .onClickContentView(R.id.container_overlay_complete, null)
                         .show();
             } else {
+                user.isVerified = true;
                 verificationOverlay.dismiss();
         }}
          //        modStatusListener = FirebaseFirestore.getInstance().collection(COLLECTION_USERS).document(user.userId)

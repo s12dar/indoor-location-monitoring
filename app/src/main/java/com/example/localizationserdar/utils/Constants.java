@@ -11,10 +11,7 @@ public class Constants {
     public static final String PHONE_NUMBER = "phoneNumber";
     public static final String EMAIL = "email";
     public static final String CREATED_AT = "createdAt";
-    public static final String VERIFICATION_STATUS = "verificationStatus";
-    public static final String STATUS_PENDING = "pending";
-    public static final String STATUS_REJECTED = "rejected";
-    public static final String STATUS_ACCEPTED = "accepted";
+    public static final String IS_VERIFIED = "isVerified";
     public static final String USER_LIVE_LOCATION = "liveLocation";
     public static final String LAST_LOCATION_UPDATED_AT = "lastLocationUpdatedAt";
     public static final double INITIAL_LAT = 44.458041;
