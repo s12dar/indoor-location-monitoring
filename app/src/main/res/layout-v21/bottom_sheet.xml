@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-    android:layout_height="400dp"
+    android:layout_height="330dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    app:behavior_peekHeight="500dp"
+    app:behavior_peekHeight="330dp"
     app:behavior_hideable="true"
     android:id="@+id/b_sh"
     xmlns:android="http://schemas.android.com/apk/res/android"

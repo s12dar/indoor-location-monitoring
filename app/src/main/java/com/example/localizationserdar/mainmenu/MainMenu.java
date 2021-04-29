@@ -88,7 +88,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.example.localizationserdar.utils.Constants.BEACON_IN_AI_LAB;
 import static com.example.localizationserdar.utils.Constants.BEACON_IN_CANTINA;
 import static com.example.localizationserdar.utils.Constants.BEACON_IN_LIBRARY;
-import static com.example.localizationserdar.utils.Constants.BEACON_IN_MEETING_ROOM;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_TEACHERS_ROOM;
 import static com.example.localizationserdar.utils.Constants.EMPTY_STRING;
 import static com.example.localizationserdar.utils.Constants.ERROR_DIALOG_REQUEST;
 import static com.example.localizationserdar.utils.Constants.EXISTING_USER;
@@ -601,7 +601,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                     int avatar = R.drawable.oh_hey;
                     String snippet = "Do you want to determine route to " + beacon.beaconName+"?";
                     switch (beacon.beaconName) {
-                        case BEACON_IN_MEETING_ROOM:
+                        case BEACON_IN_TEACHERS_ROOM:
                             avatar = R.drawable.ic_meeting;
                             break;
                         case BEACON_IN_CANTINA:

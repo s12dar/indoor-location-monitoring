@@ -1,5 +1,6 @@
 package com.example.localizationserdar.rewards;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -64,23 +65,31 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
         mScannerView.setResultHandler(this);
         mScannerView.startCamera();
 
-        if (getView() == null) {
-            return;
-        }
+//        if (getView() == null) {
+//            return;
+//        }
 
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener((v, keyCode, event) -> {
-
-            // handle back button's click listener
-            return event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK;
-        });
+//        getView().setFocusableInTouchMode(true);
+//        getView().requestFocus();
+//        getView().setOnKeyListener((v, keyCode, event) -> {
+//
+//            // handle back button's click listener
+//            return event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK;
+//        });
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        mScannerView.stopCameraPreview(); //stopPreview
+        mScannerView.stopCamera();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mScannerView.stopCameraPreview(); //stopPreview
         mScannerView.stopCamera();
     }
 
@@ -95,6 +104,8 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mScannerView.stopCameraPreview(); //stopPreview
+        mScannerView.stopCamera();
         binding = null;
     }
 
@@ -175,7 +186,10 @@ public class QrScannerReward extends Fragment implements ZXingScannerView.Result
     }
 
     private void requestPermission() {
-        ActivityCompat.requestPermissions(requireActivity(), new String[] {CAMERA}, REQUEST_CAMERA);
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA},
+                    50); }
     }
 
     private Boolean checkPermission() {

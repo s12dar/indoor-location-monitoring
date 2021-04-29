@@ -62,9 +62,9 @@ public class Constants {
     /**
      * BEACON NAMES
      */
-    public static final String BEACON_IN_MEETING_ROOM = "Meeting Room";
+    public static final String BEACON_IN_TEACHERS_ROOM = "Teacher's room";
     public static final String BEACON_IN_AI_LAB = "AI Laboratory";
     public static final String BEACON_IN_LIBRARY = "Library";
-    public static final String BEACON_IN_CANTINA = "Cantina";
+    public static final String BEACON_IN_CANTINA = "Canteen";
 
 }

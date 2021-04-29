@@ -8,11 +8,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.localizationserdar.R;
 import com.example.localizationserdar.databinding.RewardContainerItemBinding;
 
 import java.util.List;
+
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_AI_LAB;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_CANTINA;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_LIBRARY;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_TEACHERS_ROOM;
 
 public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardViewHolder> {
     private RewardContainerItemBinding binding;

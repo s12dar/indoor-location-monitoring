@@ -24,7 +24,7 @@ import java.util.List;
 import static com.example.localizationserdar.utils.Constants.BEACON_IN_AI_LAB;
 import static com.example.localizationserdar.utils.Constants.BEACON_IN_CANTINA;
 import static com.example.localizationserdar.utils.Constants.BEACON_IN_LIBRARY;
-import static com.example.localizationserdar.utils.Constants.BEACON_IN_MEETING_ROOM;
+import static com.example.localizationserdar.utils.Constants.BEACON_IN_TEACHERS_ROOM;
 
 public class LocalizationAdapter extends RecyclerView.Adapter<LocalizationAdapter.LocalizationViewHolder> implements Filterable {
 
@@ -60,7 +60,7 @@ public class LocalizationAdapter extends RecyclerView.Adapter<LocalizationAdapte
         holder.tvBeaconName.setText(beacon.beaconName);
         holder.tvBeaconDesc.setText(beacon.beaconDesc);
         switch (beacon.beaconName) {
-            case BEACON_IN_MEETING_ROOM:
+            case BEACON_IN_TEACHERS_ROOM:
                 holder.ivBeacon.setImageDrawable(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_meeting));
                 break;
             case BEACON_IN_AI_LAB:

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="twenty_four">24sp</dimen>
+    <dimen name="twenty_two">22sp</dimen>
     <dimen name="size_generic">8sp</dimen>
     <dimen name="eighteen">18sp</dimen>
     <dimen name="twenty">20sp</dimen>
     <dimen name="twelve">12sp</dimen>
+    <dimen name="ten">10sp</dimen>
     <dimen name="custom_marker_image">50dp</dimen>
     <dimen name="custom_marker_padding">2dp</dimen>
 </resources>

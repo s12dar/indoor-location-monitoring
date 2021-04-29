@@ -62,23 +62,24 @@ public class QrScanner extends Fragment implements ZXingScannerView.ResultHandle
         mScannerView.setResultHandler(this);
         mScannerView.startCamera();
 
-        if (getView() == null) {
-            return;
-        }
+//        if (getView() == null) {
+//            return;
+//        }
 
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener((v, keyCode, event) -> {
-
-            // handle back button's click listener
-            return event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK;
-        });
+//        getView().setFocusableInTouchMode(true);
+//        getView().requestFocus();
+//        getView().setOnKeyListener((v, keyCode, event) -> {
+//
+//            // handle back button's click listener
+//            return event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK;
+//        });
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        mScannerView.stopCameraPreview(); //stopPreview
         mScannerView.stopCamera();
     }
 

@@ -13,11 +13,11 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
         android:fontFamily="@font/poppins_regular"
-        android:textSize="@dimen/twenty_four"
+        android:textSize="@dimen/twenty_two"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="Good evening, "/>
+        tools:text="Good afternoon, "/>
 
     <TextView
         android:id="@+id/tv_name"
@@ -27,7 +27,7 @@
         android:textColor="@color/colorWhite"
         android:fontFamily="@font/poppins_regular"
         android:textStyle="bold"
-        android:textSize="@dimen/twenty_four"
+        android:textSize="@dimen/twenty_two"
         app:layout_constraintStart_toEndOf="@+id/tv_morning"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
