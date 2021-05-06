@@ -120,8 +120,9 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private GeoApiContext geoApiContext = null;
     private ArrayList<PolyLineData> polyLinesData = new ArrayList<>();
     private Marker mSelectedMarker = null;
-    private ArrayList<Marker> tripMarkers = new ArrayList<>();
+    private final ArrayList<Marker> tripMarkers = new ArrayList<>();
     private Marker markerForItemClick;
+    private final Boolean isIndoorIcon = true;
 
     public MainMenu() {
         // Required empty public constructor
@@ -435,7 +436,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         binding.mvMap.onStart();
     }
 
-    @SuppressLint("LongLogTag")
+    @SuppressLint({"LongLogTag", "SetTextI18n"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -462,6 +463,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         binding.bottomSheet.tvNiceToSeeYou.setText("Hi " + user.firstName + ". Nice to see you again!");
 
         binding.fabRefresh.setOnClickListener(v -> addMapMarkers());
+        binding.fabChangeMap.setOnClickListener(v -> changeMap());
 
         initGoogleMap(savedInstanceState);
 
@@ -570,7 +572,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                         LocalizationLevel.getInstance().currentUser = user;
                         Log.d(TAG, "updatedUserDetails");
                     } else {
-                        Log.d(TAG, exception.getLocalizedMessage().toString());
+                        Log.d(TAG, exception.getLocalizedMessage());
                     }
                 });
                 startLocationService();
@@ -628,6 +630,16 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             }
             clusterManager.cluster();
             setCameraViewForMap();
+        }
+    }
+
+    private void changeMap() {
+        if (isIndoorIcon) {
+            binding.fabChangeMap.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_change_map_to_outdoor));
+            binding.mvMap.setVisibility(View.GONE);
+        } else {
+            binding.fabChangeMap.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_change_map_to_indoor));
+
         }
     }
 

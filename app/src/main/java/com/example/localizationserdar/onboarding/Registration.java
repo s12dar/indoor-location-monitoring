@@ -107,7 +107,7 @@ public class Registration extends Fragment {
 
     private void createAccount(String email, String password, String firstName, String lastName, String phoneNumber) {
 
-        if (email.contains("@gmail.com")) {
+        if (email.contains("@gmail.com") || email.contains("@stud.etti.upb.ro") || email.contains("@upb.ro")) {
             binding.progressBar.setVisibility(View.VISIBLE);
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {

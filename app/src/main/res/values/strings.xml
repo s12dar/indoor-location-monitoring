@@ -77,4 +77,7 @@
 
     <!-- GOOGLE MAPS -->
     <string name="google_maps_api_key">AIzaSyCq-fkjlPHV6eSOb6ouf7BDtXTrLRmT9ME</string>
+
+    <!-- MAIN MENU -->
+    <string name="desc_reset_map">Reset Map description</string>
 </resources>
