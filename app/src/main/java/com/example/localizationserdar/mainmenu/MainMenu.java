@@ -46,6 +46,7 @@ import com.example.localizationserdar.datamodels.ClusterMarker;
 import com.example.localizationserdar.datamodels.PolyLineData;
 import com.example.localizationserdar.datamodels.User;
 import com.example.localizationserdar.localization.LocalizationAdapter;
+import com.example.localizationserdar.services.BluetoothService;
 import com.example.localizationserdar.services.LocationService;
 import com.example.localizationserdar.utils.ClusterManagerRenderer;
 import com.example.localizationserdar.utils.OnboardingUtils;
@@ -65,6 +66,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -84,6 +86,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.localizationserdar.utils.Constants.BEACON_IN_AI_LAB;
 import static com.example.localizationserdar.utils.Constants.BEACON_IN_CANTINA;
@@ -122,7 +125,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     private Marker mSelectedMarker = null;
     private final ArrayList<Marker> tripMarkers = new ArrayList<>();
     private Marker markerForItemClick;
-    private final Boolean isIndoorIcon = true;
+    private Boolean isIndoorIcon = true;
 
     public MainMenu() {
         // Required empty public constructor
@@ -170,6 +173,11 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                     getLocationPermission();
                 }
             }
+
+            if (!BluetoothService.isBluetoothEnabled()) {
+                requestBluetooth();
+            }
+            BluetoothService.startScanning();
         }
         user = LocalizationLevel.getInstance().currentUser;
     }
@@ -185,6 +193,15 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         }
 
         binding.mvMap.onSaveInstanceState(mapViewBundle);
+    }
+
+    private void requestBluetooth() {
+        Snackbar snackbar = Snackbar.make(
+                binding.cdlBsh,
+                R.string.txt_bluetooth_disabled,
+                Snackbar.LENGTH_INDEFINITE
+        );
+        snackbar.setAction(R.string.action_enabled, view -> BluetoothService.requestBluetoothEnabling(requireActivity())).show();
     }
 
     private void initGoogleMap(Bundle savedInstanceState) {
@@ -416,6 +433,15 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
                     getLocationPermission();
                 }
             }
+            case BluetoothService.REQUEST_CODE_ENABLE_BLUETOOTH: {
+                if (requestCode == RESULT_OK) {
+                    Log.d(TAG, "Bluetooth enabled, starting  to scan");
+                    BluetoothService.startScanning();
+                } else {
+                    Log.d(TAG, "Bluetooth is not enabled");
+                    BluetoothService.requestBluetoothEnabling(getActivity());
+                }
+            }
         }
     }
 
@@ -426,6 +452,8 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 //        setNavigationViewListener();
         binding = MainMenuBinding.inflate(inflater, container, false);
         ((OnboardingUtils) requireActivity()).hideToolbar();
+
+        BluetoothService.initialize(requireContext());
 
         return binding.getRoot();
     }
@@ -635,10 +663,14 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
     private void changeMap() {
         if (isIndoorIcon) {
+            addMapMarkers();
+            isIndoorIcon = false;
             binding.fabChangeMap.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_change_map_to_outdoor));
             binding.mvMap.setVisibility(View.GONE);
         } else {
+            isIndoorIcon = true;
             binding.fabChangeMap.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_change_map_to_indoor));
+            binding.mvMap.setVisibility(View.VISIBLE);
 
         }
     }
@@ -783,6 +815,8 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     @Override
     public void onPause() {
         binding.mvMap.onPause();
+        BluetoothService.stopScanning();
+
         super.onPause();
     }
 

@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.localizationserdar"
-        minSdkVersion 16
+        minSdkVersion 18
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -82,4 +82,8 @@ dependencies {
     // Google Maps Services (needed for directions)
     implementation 'com.google.maps:google-maps-services:0.2.9'
     implementation 'org.slf4j:slf4j-nop:1.7.25'
+
+    // neXenio indoor positioning library
+    implementation 'com.nexenio.bleindoorpositioning:core:0.4.0'
+    implementation "com.polidea.rxandroidble:rxandroidble:1.4.3"
 }

@@ -80,4 +80,6 @@
 
     <!-- MAIN MENU -->
     <string name="desc_reset_map">Reset Map description</string>
+    <string name="txt_bluetooth_disabled">Bluetooth disabled</string>
+    <string name="action_enabled">Enable</string>
 </resources>
