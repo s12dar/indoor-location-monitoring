@@ -27,9 +27,14 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.Date;
 import java.util.LinkedList;
 
+import static com.example.localizationserdar.utils.Constants.EMAIL_STUDENTS;
+import static com.example.localizationserdar.utils.Constants.EMAIL_TEACHERS;
 import static com.example.localizationserdar.utils.Constants.INITIAL_LAT;
 import static com.example.localizationserdar.utils.Constants.INITIAL_LNG;
 import static com.example.localizationserdar.utils.Constants.NEW_USER;
+import static com.example.localizationserdar.utils.Constants.OTHER;
+import static com.example.localizationserdar.utils.Constants.STUDENT;
+import static com.example.localizationserdar.utils.Constants.TEACHER;
 import static com.example.localizationserdar.utils.Constants.USER_STATUS;
 
 
@@ -131,6 +136,14 @@ public class Registration extends Fragment {
                                 user.createdAt = new Timestamp(new Date());
                                 user.isVerified = false;
                                 user.liveLocation = new GeoPoint(INITIAL_LAT, INITIAL_LNG);
+
+                                if (user.email.contains(EMAIL_STUDENTS)) {
+                                    user.status = STUDENT;
+                                } else if (user.email.contains(EMAIL_TEACHERS)) {
+                                    user.status = TEACHER;
+                                } else {
+                                    user.status = OTHER;
+                                }
 
                                 LocalizationLevel.getInstance().currentUser = user;
                             } else {

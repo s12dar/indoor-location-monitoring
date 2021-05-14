@@ -10,6 +10,7 @@ public class Constants {
     public static final String LAST_NAME = "lastName";
     public static final String PHONE_NUMBER = "phoneNumber";
     public static final String EMAIL = "email";
+    public static final String STATUS = "status";
     public static final String CREATED_AT = "createdAt";
     public static final String IS_VERIFIED = "isVerified";
     public static final String USER_LIVE_LOCATION = "liveLocation";
@@ -67,4 +68,18 @@ public class Constants {
     public static final String BEACON_IN_LIBRARY = "Library";
     public static final String BEACON_IN_CANTINA = "Canteen";
 
+    /**
+     * MAIL TYPE
+     */
+
+    public static final String EMAIL_TEACHERS = "@gmail.com";
+    public static final String EMAIL_STUDENTS = "@stud.etti.upb.ro";
+
+    /**
+     * USER TYPE
+     */
+
+    public static final String TEACHER = "Teacher";
+    public static final String STUDENT = "Student";
+    public static final String OTHER = "Other";
 }

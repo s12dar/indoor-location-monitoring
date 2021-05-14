@@ -16,6 +16,7 @@ import static com.example.localizationserdar.utils.Constants.IS_VERIFIED;
 import static com.example.localizationserdar.utils.Constants.LAST_LOCATION_UPDATED_AT;
 import static com.example.localizationserdar.utils.Constants.LAST_NAME;
 import static com.example.localizationserdar.utils.Constants.PHONE_NUMBER;
+import static com.example.localizationserdar.utils.Constants.STATUS;
 import static com.example.localizationserdar.utils.Constants.UID;
 import static com.example.localizationserdar.utils.Constants.USER_LIVE_LOCATION;
 
@@ -29,6 +30,8 @@ public class User {
     public String email;
     @PropertyName(PHONE_NUMBER)
     public String phoneNumber;
+    @PropertyName(STATUS)
+    public String status;
     @PropertyName(UID)
     public String userId;
     @PropertyName(CREATED_AT)
@@ -47,6 +50,7 @@ public class User {
         map.put(FIRST_NAME, firstName);
         map.put(LAST_NAME, lastName);
         map.put(EMAIL, email);
+        map.put(STATUS, status);
         map.put(PHONE_NUMBER, phoneNumber);
         map.put(CREATED_AT, createdAt);
         map.put(UID, userId);

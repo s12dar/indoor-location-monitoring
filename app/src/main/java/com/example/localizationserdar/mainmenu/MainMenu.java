@@ -103,6 +103,7 @@ import static com.example.localizationserdar.utils.Constants.PERMISSIONS_REQUEST
 import static com.example.localizationserdar.utils.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 import static com.example.localizationserdar.utils.Constants.REWARD_COUNT;
 import static com.example.localizationserdar.utils.Constants.SP_FILES;
+import static com.example.localizationserdar.utils.Constants.TEACHER;
 import static com.example.localizationserdar.utils.Constants.USER_STATUS;
 
 public class MainMenu extends Fragment implements NavigationView.OnNavigationItemSelectedListener,
@@ -491,7 +492,27 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         binding.bottomSheet.tvNiceToSeeYou.setText("Hi " + user.firstName + ". Nice to see you again!");
 
         binding.fabRefresh.setOnClickListener(v -> addMapMarkers());
-        binding.fabChangeMap.setOnClickListener(v -> changeMap());
+        binding.fabChangeMapToIndoor.setOnClickListener(v -> {
+            addMapMarkers();
+            binding.mvMap.setVisibility(View.GONE);
+            binding.fabChangeMapToIndoor.setVisibility(View.GONE);
+            binding.fabChangeMapToOutdoor.setVisibility(View.VISIBLE);
+            binding.fabRefresh.setVisibility(View.GONE);
+
+            if (user.status.equals(TEACHER)) {
+                binding.fabRadar.setVisibility(View.VISIBLE);
+                binding.fabGraph.setVisibility(View.VISIBLE);
+            }
+        });
+
+        binding.fabChangeMapToOutdoor.setOnClickListener(v -> {
+            binding.mvMap.setVisibility(View.VISIBLE);
+            binding.fabChangeMapToOutdoor.setVisibility(View.GONE);
+            binding.fabRefresh.setVisibility(View.VISIBLE);
+            binding.fabChangeMapToIndoor.setVisibility(View.VISIBLE);
+            binding.fabGraph.setVisibility(View.GONE);
+            binding.fabRadar.setVisibility(View.GONE);
+        });
 
         initGoogleMap(savedInstanceState);
 
@@ -658,20 +679,6 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
             }
             clusterManager.cluster();
             setCameraViewForMap();
-        }
-    }
-
-    private void changeMap() {
-        if (isIndoorIcon) {
-            addMapMarkers();
-            isIndoorIcon = false;
-            binding.fabChangeMap.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_change_map_to_outdoor));
-            binding.mvMap.setVisibility(View.GONE);
-        } else {
-            isIndoorIcon = true;
-            binding.fabChangeMap.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_change_map_to_indoor));
-            binding.mvMap.setVisibility(View.VISIBLE);
-
         }
     }
 

@@ -67,7 +67,7 @@ public class Settings extends Fragment {
     private void setProfileDetails() {
         binding.tvEmail.setText(user.email);
         binding.tvPhoneNumber.setText(user.phoneNumber);
-        binding.tvNameSurname.setText(String.format("%s %s",user.firstName,user.lastName));
+        binding.tvNameSurnameStatus.setText(String.format("%s %s (%s)", user.firstName, user.lastName, user.status));
     }
 
     private void btnEditPressed() {
