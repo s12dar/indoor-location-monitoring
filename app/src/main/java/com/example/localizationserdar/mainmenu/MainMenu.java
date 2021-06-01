@@ -46,6 +46,7 @@ import com.example.localizationserdar.datamodels.ClusterMarker;
 import com.example.localizationserdar.datamodels.PolyLineData;
 import com.example.localizationserdar.datamodels.User;
 import com.example.localizationserdar.localization.LocalizationAdapter;
+import com.example.localizationserdar.services.AndroidLocationProvider;
 import com.example.localizationserdar.services.BluetoothService;
 import com.example.localizationserdar.services.LocationService;
 import com.example.localizationserdar.utils.ClusterManagerRenderer;
@@ -103,7 +104,6 @@ import static com.example.localizationserdar.utils.Constants.PERMISSIONS_REQUEST
 import static com.example.localizationserdar.utils.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 import static com.example.localizationserdar.utils.Constants.REWARD_COUNT;
 import static com.example.localizationserdar.utils.Constants.SP_FILES;
-import static com.example.localizationserdar.utils.Constants.TEACHER;
 import static com.example.localizationserdar.utils.Constants.USER_STATUS;
 
 public class MainMenu extends Fragment implements NavigationView.OnNavigationItemSelectedListener,
@@ -139,8 +139,15 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         if (firebaseUser != null) {
             firebaseUser.reload();
         }
-//        manageModerationStatus();
-          user = LocalizationLevel.getInstance().currentUser;
+
+        // setup location
+        AndroidLocationProvider.initialize(requireActivity());
+
+        // setup bluetooth
+        BluetoothService.initialize(requireContext());
+
+        // manageModerationStatus();
+        user = LocalizationLevel.getInstance().currentUser;
     }
 
     @Override
@@ -166,14 +173,23 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
         binding.mvMap.onResume();
         if (firebaseUser != null && firebaseUser.isEmailVerified()) {
-            if (checkMapServices()) {
-                if (mLocationPermissionGranted) {
-                    Log.d(TAG, "I have a location permissions");
-                    getLastKnownLocation();
-                } else {
-                    getLocationPermission();
-                }
+//            if (checkMapServices()) {
+//                if (mLocationPermissionGranted) {
+//                    Log.d(TAG, "I have a location permissions");
+//                    getLastKnownLocation();
+//                } else {
+//                    getLocationPermission();
+//                }
+//            }
+
+            // observe location
+            if (!AndroidLocationProvider.hasLocationPermission(requireContext())) {
+                AndroidLocationProvider.requestLocationPermission(requireActivity());
+            } else if (!AndroidLocationProvider.isLocationEnabled(requireContext())) {
+                requestLocationServices();
             }
+            AndroidLocationProvider.startRequestingLocationUpdates();
+            AndroidLocationProvider.requestLastKnownLocation();
 
             if (!BluetoothService.isBluetoothEnabled()) {
                 requestBluetooth();
@@ -194,6 +210,15 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         }
 
         binding.mvMap.onSaveInstanceState(mapViewBundle);
+    }
+
+    private void requestLocationServices() {
+        Snackbar snackbar = Snackbar.make(
+                binding.cdlBsh,
+                R.string.txt_location_disabled,
+                Snackbar.LENGTH_INDEFINITE
+        );
+        snackbar.setAction(R.string.action_enabled, view -> AndroidLocationProvider.requestLocationEnabling(requireActivity())).show();
     }
 
     private void requestBluetooth() {
@@ -454,7 +479,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         binding = MainMenuBinding.inflate(inflater, container, false);
         ((OnboardingUtils) requireActivity()).hideToolbar();
 
-        BluetoothService.initialize(requireContext());
+//        BluetoothService.initialize(requireContext());
 
         return binding.getRoot();
     }
@@ -493,25 +518,18 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
         binding.fabRefresh.setOnClickListener(v -> addMapMarkers());
         binding.fabChangeMapToIndoor.setOnClickListener(v -> {
-            addMapMarkers();
-            binding.mvMap.setVisibility(View.GONE);
-            binding.fabChangeMapToIndoor.setVisibility(View.GONE);
-            binding.fabChangeMapToOutdoor.setVisibility(View.VISIBLE);
-            binding.fabRefresh.setVisibility(View.GONE);
+            Navigation.findNavController(view).navigate(R.id.action_mainMenu_to_indoorMapFragment);
 
-            if (user.status.equals(TEACHER)) {
-                binding.fabRadar.setVisibility(View.VISIBLE);
-                binding.fabGraph.setVisibility(View.VISIBLE);
-            }
-        });
-
-        binding.fabChangeMapToOutdoor.setOnClickListener(v -> {
-            binding.mvMap.setVisibility(View.VISIBLE);
-            binding.fabChangeMapToOutdoor.setVisibility(View.GONE);
-            binding.fabRefresh.setVisibility(View.VISIBLE);
-            binding.fabChangeMapToIndoor.setVisibility(View.VISIBLE);
-            binding.fabGraph.setVisibility(View.GONE);
-            binding.fabRadar.setVisibility(View.GONE);
+//            addMapMarkers();
+//            binding.mvMap.setVisibility(View.GONE);
+//            binding.fabChangeMapToIndoor.setVisibility(View.GONE);
+//            binding.fabChangeMapToOutdoor.setVisibility(View.VISIBLE);
+//            binding.fabRefresh.setVisibility(View.GONE);
+//
+//            if (user.status.equals(TEACHER)) {
+//                binding.fabRadar.setVisibility(View.VISIBLE);
+//                binding.fabGraph.setVisibility(View.VISIBLE);
+//            }
         });
 
         initGoogleMap(savedInstanceState);
@@ -822,6 +840,11 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     @Override
     public void onPause() {
         binding.mvMap.onPause();
+
+        // stop observing location
+        AndroidLocationProvider.stopRequestingLocationUpdates();
+
+        // stop observing bluetooth
         BluetoothService.stopScanning();
 
         super.onPause();
@@ -975,6 +998,5 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         }));
         final AlertDialog alert = builder.create();
         alert.show();
-
     }
 }
