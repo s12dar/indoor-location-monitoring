@@ -76,11 +76,32 @@
     <string name="desc_reward_img">Scan Qr code</string>
 
     <!-- GOOGLE MAPS -->
-    <string name="google_maps_api_key">AIzaSyBhuxUKodBqSBOxXf4ZyX-RGHgWb9Gqm_Q</string>
+    <string name="google_maps_api_key">AIzaSyDNdGlIl6_B0CtCOcxeVFddBNUIWDGgDSU</string>
 
     <!-- MAIN MENU -->
     <string name="desc_reset_map">Reset Map description</string>
     <string name="txt_bluetooth_disabled">Bluetooth disabled</string>
     <string name="txt_location_disabled">Location disabled</string>
     <string name="action_enabled">Enable</string>
+
+    <!-- BEACON GRAPH -->
+    <string name="title_chart">Chart</string>
+    <string name="axis_label_time">Time in seconds</string>
+    <string name="axis_label_rssi">RSSI in dBm</string>
+    <string name="axis_label_rssi_filtered">Filtered RSSI in dBm</string>
+    <string name="axis_label_distance">Distance in meters</string>
+    <string name="axis_label_frequency">Frequency in Hz</string>
+    <string name="axis_label_variance">Variance in dBm</string>
+
+    <!-- GRAPH MENU-->
+    <string name="menu_color">Coloring</string>
+    <string name="menu_color_by_instance">Instances</string>
+    <string name="menu_color_by_type">Types</string>
+    <string name="menu_color_by_property">Properties</string>
+    <string name="menu_value">Value</string>
+    <string name="menu_value_rssi">RSSI</string>
+    <string name="menu_value_rssi_filtered">RSSI (Filtered)</string>
+    <string name="menu_value_distance">Distance</string>
+    <string name="menu_value_frequency">Frequency</string>
+    <string name="menu_value_variance">Variance</string>
 </resources>

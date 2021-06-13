@@ -1,9 +1,21 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/indoor_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.localizationserdar.mainmenu.IndoorMapFragment">
+    android:background="@color/colorWhiteSmoke"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.localizationserdar.mainmenu.IndoorMapFragment"
+    tools:openDrawer="start">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_change_map_to_outdoor"
@@ -66,4 +78,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/header_drawer"
+        app:itemTextAppearance="@style/nav_drawer_font"
+        app:menu="@menu/drawer_navigation" />
+</androidx.drawerlayout.widget.DrawerLayout>

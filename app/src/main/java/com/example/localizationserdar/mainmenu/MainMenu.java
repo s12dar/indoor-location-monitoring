@@ -146,7 +146,6 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         // setup bluetooth
         BluetoothService.initialize(requireContext());
 
-        // manageModerationStatus();
         user = LocalizationLevel.getInstance().currentUser;
     }
 
@@ -173,14 +172,14 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
 
         binding.mvMap.onResume();
         if (firebaseUser != null && firebaseUser.isEmailVerified()) {
-//            if (checkMapServices()) {
-//                if (mLocationPermissionGranted) {
-//                    Log.d(TAG, "I have a location permissions");
-//                    getLastKnownLocation();
-//                } else {
-//                    getLocationPermission();
-//                }
-//            }
+            if (checkMapServices()) {
+                if (mLocationPermissionGranted) {
+                    Log.d(TAG, "I have a location permissions");
+                    getLastKnownLocation();
+                } else {
+                    getLocationPermission();
+                }
+            }
 
             // observe location
             if (!AndroidLocationProvider.hasLocationPermission(requireContext())) {
@@ -772,6 +771,7 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
         Navigation.findNavController(requireView()).navigate(R.id.action_mainMenu_to_login);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
