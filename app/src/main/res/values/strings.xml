@@ -25,6 +25,12 @@
     <string name="error_phone_number">Oops, what\'s your phone number?</string>
     <string name="error_password">Oop, please set a password</string>
     <string name="txt_logo">CIRCLEn</string>
+    <string name="txt_title_welcome">Oh hey!</string>
+    <string name="txt_desc_welcome">Welcome to localization monitoring platform of University Politehnica of Bucharest.</string>
+    <string name="txt_title_welcome2">Navigate indoor.</string>
+    <string name="txt_desc_welcome2">Don\'t miss any valuable knowledge by being late to your classes, we mean it.</string>
+    <string name="txt_title_welcome3">But first,</string>
+    <string name="txt_desc_welcome3">Please sign up with your University email address, and verify your email address to start using our platform.</string>
 
     <!--DRAWER NAVIGATION-->
     <string name="drawer_controller_open">open</string>
@@ -48,7 +54,7 @@
     <!--DRAWER NAVIGATION-->
     <string name="menu_profile">Profile</string>
     <string name="menu_settings">Settings</string>
-    <string name="menu_rewards">Rewards</string>
+    <string name="menu_rewards">Attendance</string>
     <string name="menu_logout">Log out</string>
     <string name="menu_localization">Localizations</string>
     <string name="menu_terms_and_privacy">Terms and Conditions / Privacy</string>
@@ -69,7 +75,7 @@
 
     <!--REWARD MENU-->
     <string name="txt_reward_title">Scan for reward</string>
-    <string name="txt_reward_subtitle">There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain…</string>
+    <string name="txt_reward_subtitle">Scan the QR code provided by Lecturer to get +1 for attendance list.</string>
     <string name="btn_lets_get_started">Let\'s get started</string>
     <string name="btn_start_scanning">Start scanning</string>
     <string name="txt_scan_qr">Scan QR code</string>

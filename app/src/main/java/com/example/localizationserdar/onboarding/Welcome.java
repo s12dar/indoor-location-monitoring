@@ -77,18 +77,18 @@ public class Welcome extends Fragment {
         List<WelcomeItem> welcomeItemList = new ArrayList<>();
 
         WelcomeItem firstPage = new WelcomeItem();
-        firstPage.setTitle("Oh hey!");
-        firstPage.setDescription("Welcome to localization monitoring platform of University Politehnica of Bucharest.");
+        firstPage.setTitle(getResources().getString(R.string.txt_title_welcome));
+        firstPage.setDescription(getResources().getString(R.string.txt_desc_welcome));
         firstPage.setImage(R.drawable.oh_hey);
 
         WelcomeItem secondPage = new WelcomeItem();
-        secondPage.setTitle("Navigate and...");
-        secondPage.setDescription("Don't miss any valuable knowledge by being late to your classes, we mean it.");
+        secondPage.setTitle(getResources().getString(R.string.txt_title_welcome2));
+        secondPage.setDescription(getResources().getString(R.string.txt_desc_welcome2));
         secondPage.setImage(R.drawable.navigate);
 
         WelcomeItem thirdItem = new WelcomeItem();
-        thirdItem.setTitle("But first,");
-        thirdItem.setDescription("Let us investigate your profile, if you're a student @ our University or not. Of course, if you're not verified before.");
+        thirdItem.setTitle(getResources().getString(R.string.txt_title_welcome3));
+        thirdItem.setDescription(getResources().getString(R.string.txt_desc_welcome3));
         thirdItem.setImage(R.drawable.but_first);
 
         welcomeItemList.add(firstPage);
