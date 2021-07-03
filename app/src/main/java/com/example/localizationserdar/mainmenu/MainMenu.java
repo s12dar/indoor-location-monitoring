@@ -841,9 +841,9 @@ public class MainMenu extends Fragment implements NavigationView.OnNavigationIte
     public void onPause() {
         binding.mvMap.onPause();
 
-        // stop observing location
-        AndroidLocationProvider.stopRequestingLocationUpdates();
-
+//        // stop observing location
+//        AndroidLocationProvider.stopRequestingLocationUpdates();
+//
         // stop observing bluetooth
         BluetoothService.stopScanning();
 

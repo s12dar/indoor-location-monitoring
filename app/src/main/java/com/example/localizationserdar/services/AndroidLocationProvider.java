@@ -28,8 +28,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.nexenio.bleindoorpositioning.location.Location;
 import com.nexenio.bleindoorpositioning.location.LocationListener;
@@ -81,31 +79,23 @@ public final class AndroidLocationProvider implements LocationProvider {
         SettingsClient client = LocationServices.getSettingsClient(activity);
         Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
 
-        task.addOnSuccessListener(activity, new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                Log.v(TAG, "Location settings satisfied");
-            }
-        });
+        task.addOnSuccessListener(activity, locationSettingsResponse -> Log.v(TAG, "Location settings satisfied"));
 
-        task.addOnFailureListener(activity, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                int statusCode = ((ApiException) e).getStatusCode();
-                switch (statusCode) {
-                    case CommonStatusCodes.RESOLUTION_REQUIRED:
-                        Log.w(TAG, "Location settings not satisfied, attempting resolution intent");
-                        try {
-                            ResolvableApiException resolvable = (ResolvableApiException) e;
-                            resolvable.startResolutionForResult(activity, REQUEST_CODE_LOCATION_SETTINGS);
-                        } catch (IntentSender.SendIntentException sendIntentException) {
-                            Log.e(TAG, "Unable to start resolution intent");
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        Log.w(TAG, "Location settings not satisfied and can't be changed");
-                        break;
-                }
+        task.addOnFailureListener(activity, e -> {
+            int statusCode = ((ApiException) e).getStatusCode();
+            switch (statusCode) {
+                case CommonStatusCodes.RESOLUTION_REQUIRED:
+                    Log.w(TAG, "Location settings not satisfied, attempting resolution intent");
+                    try {
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(activity, REQUEST_CODE_LOCATION_SETTINGS);
+                    } catch (IntentSender.SendIntentException sendIntentException) {
+                        Log.e(TAG, "Unable to start resolution intent");
+                    }
+                    break;
+                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                    Log.w(TAG, "Location settings not satisfied and can't be changed");
+                    break;
             }
         });
     }
