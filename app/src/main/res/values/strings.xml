@@ -81,9 +81,6 @@
     <string name="txt_scan_qr">Scan QR code</string>
     <string name="desc_reward_img">Scan Qr code</string>
 
-    <!-- GOOGLE MAPS -->
-    <string name="google_maps_api_key">AIzaSyDNdGlIl6_B0CtCOcxeVFddBNUIWDGgDSU</string>
-
     <!-- MAIN MENU -->
     <string name="desc_reset_map">Reset Map description</string>
     <string name="txt_bluetooth_disabled">Bluetooth disabled</string>
