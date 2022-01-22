@@ -1,17 +1,21 @@
-# Project objectives:
+## Indoor location monitoring
 
-The project consists in the design and development of an indoor location monitoring application, using Bluetooth Low Energy (BLE) beacons. The application can be used for asset tracking in places where GPS/GNSS is not available, such as indoor tracking. Various types of Bluetooth beacons are used to test the accuracy between different standards (Bluetooth 4.2 vs 5.0). 
+ILM is an indoor locarion monitoring application, using BLE Beacons. It aims to let the teachers and students find their way to a point of interest indoor such as specific laboratory room, coffee machine, etc. at the inside of the University building.
+<img src="/arts/beacons.png">
 
-## Technology tools:
- 
-This work also covers the outdoor navigation when the user is far away from the target destination. Most of the signals will not be available indoor due to signals are not being able to go through walls, and this is where the user should switch the outdoor navigation map to the indoor positioning map with floating action button with the related icon. 
+## Tech stack 🏗
 
-In outdoor, to receive the directions between the user with the target destination and draw the routes with their alternatives the Google Directions API is used. It’s a web service which returns XML or JSON formatted directions data and to do this job it uses HTTP request. And to obtain user’s geo-coordinates to the database in every four seconds, a location service is built. To navigate outdoor the Google Maps SDK is used which lets us to add the map to our Android application and to use the Google Maps data such as displaying the maps, gesture responses of the maps. 
+* [Java](https://docs.oracle.com/en/java/)
+* [Firebase](https://firebase.google.com/)
+* [Google Cloud Platform](https://cloud.google.com/)
+* [MVVM Architecture](https://developer.android.com/jetpack/guide)
+* [Jetpack Components](https://developer.android.com/jetpack)
+* [Material Design](https://material.io/design)
 
-In the indoor positioning part, to estimate the positions based on the received advertising packets from used beacons a third-party library called [BLE Indoor Positioning](https://github.com/neXenio/BLE-Indoor-Positioning) is used. Therefore, the Bluetooth scanning method to get the data from the beacons nearby is implemented, and once the beacon data such as mac address, advertising data, and RSSI data is obtained and pass through to the Beacon Manager singleton, everything else is taken care.
+## Screenshots 📷
+<img src="/arts/onboarding.png">
+Teachers and students can sign up to the application, and once they verify their email address 
+with the mail sent to their University email address. By getting verified, they will be able to use the application with its full functionality.
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+<img src="/arts/main.png">
+This work also covers the outdoor navigation when the user is far away from the target destination. Once the user enters to the University building most of the signals will not be available indoor due to signals are not being able to go through walls, and this is where the user should switch the outdoor navigation map to the indoor positioning map with floating action button with the related icon.
