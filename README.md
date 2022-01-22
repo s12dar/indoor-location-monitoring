@@ -21,3 +21,6 @@ with the mail sent to their University email address. By getting verified, they 
 
 <img src="/arts/main.png" width="450" height="290">
 This work also covers the outdoor navigation when the user is far away from the target destination. Once the user enters to the University building most of the signals will not be available indoor due to signals are not being able to go through walls, and this is where the user should switch the outdoor navigation map to the indoor positioning map with floating action button with the related icon.
+
+## Contribution 🙌
+All contributions are welcome! Feel free to jump to the issues and pick one for yourself! Please write a comment inside of the issue before you start working.
