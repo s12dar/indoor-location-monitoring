@@ -17,5 +17,6 @@ Teachers and students can sign up to the application, and once they verify their
 with the mail sent to their University email address. By getting verified, they will be able to use the application with its full functionality.
 
 
+
 <img src="/arts/main.png" width="450" height="290">
 This work also covers the outdoor navigation when the user is far away from the target destination. Once the user enters to the University building most of the signals will not be available indoor due to signals are not being able to go through walls, and this is where the user should switch the outdoor navigation map to the indoor positioning map with floating action button with the related icon.
