@@ -1,6 +1,7 @@
 ## Indoor location monitoring
 
 ILM is an indoor locarion monitoring application, using BLE Beacons. It aims to let the teachers and students find their way to a point of interest indoor such as specific laboratory room, coffee machine, etc. at the inside of the University building.
+
 <img src="/arts/beacons.png" width="600" height="300">
 
 ## Tech stack 🏗
