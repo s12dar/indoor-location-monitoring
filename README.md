@@ -13,7 +13,7 @@ ILM is an indoor locarion monitoring application, using BLE Beacons. It aims to 
 * [Material Design](https://material.io/design)
 
 ## Screenshots 📷
-<img src="/arts/onboarding.png" width="400" height="270">
+<img src="/arts/onboarding.png" width="500" height="270">
 Teachers and students can sign up to the application, and once they verify their email address 
 with the mail sent to their University email address. By getting verified, they will be able to use the application with its full functionality.
 
