@@ -23,7 +23,6 @@ with the mail sent to their University email address, they will be able to use t
 
 
 <img src="/arts/main.png" width="450" height="290">
-This work also covers the outdoor navigation when the user is far away from the target destination. Once the user enters to the University building most of the signals will not be available indoor due to signals are not being able to go through walls, and this is where the user should switch the outdoor navigation map to the indoor positioning map with floating action button with the related icon above.
 
 ## Credits 🙏
 Thanks to [neXenio](https://github.com/neXenio/BLE-Indoor-Positioning) for their reference app which uses their BLE indoor positioning library.
