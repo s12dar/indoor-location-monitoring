@@ -21,9 +21,9 @@ ILM is an indoor location monitoring application, using BLE Beacons. It aims to 
 Teachers and students can sign up to the application, and once they verify their email address 
 with the mail sent to their University email address, they will be able to use the application with its full functionality.
 
-<img src="/arts/home.png" width="260" color="#DBE1FC"> &emsp;<img src="/arts/register.png" width="260" color="#DBE1FC"> &emsp;<img src="/arts/indoor_nav.png" width="260" color="#DBE1FC">
+<img src="/arts/home.png" width="260" color="#DBE1FC"> <img src="/arts/indoor_nav.png" width="260" color="#DBE1FC">
 
-Once user passes through onboarding process he/she will be able to see the target locations in outdoor map, and once she/he is near the building the map can be changed into indoor map.
+Once user passes through onboarding process he/she will be able to see the target locations in outdoor map (if user is far away from target destination he can navigate outdoor), and once she/he is near the building the map can be changed into indoor map.
 
 ## Credits 🙏
 Thanks to [neXenio](https://github.com/neXenio/BLE-Indoor-Positioning) for their reference app which uses their BLE indoor positioning library.
