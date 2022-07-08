@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/bg_bottom_sheet.xml" value="0.1695" />
+        <entry key="app/src/main/res/drawable/ic_arrow_back_24.xml" value="0.2115" />
+        <entry key="app/src/main/res/drawable/ic_graph.xml" value="0.2525" />
+        <entry key="app/src/main/res/drawable/ic_local.xml" value="0.213" />
+        <entry key="app/src/main/res/drawable/ic_map_location.xml" value="0.213" />
+        <entry key="app/src/main/res/drawable/ic_meeting.xml" value="0.2525" />
+        <entry key="app/src/main/res/drawable/ic_menu.xml" value="0.2525" />
+        <entry key="app/src/main/res/drawable/ic_profile.xml" value="0.2525" />
+        <entry key="app/src/main/res/drawable/ic_sunflower.xml" value="0.2525" />
+        <entry key="app/src/main/res/drawable/indicator_active.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/indicator_inactive.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/rounded_border.xml" value="0.1" />
+        <entry key="app/src/main/res/layout-v21/bottom_sheet.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2953125" />
+        <entry key="app/src/main/res/layout/bottom_sheet.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/header_drawer.xml" value="0.18703703703703703" />
+        <entry key="app/src/main/res/layout/localization_item.xml" value="0.17255434782608695" />
+        <entry key="app/src/main/res/layout/login.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/main_menu.xml" value="0.14361702127659576" />
+        <entry key="app/src/main/res/layout/qr_scanner_reward.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/reward_container_item.xml" value="0.2296875" />
+        <entry key="app/src/main/res/layout/settings.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/toolbar.xml" value="0.2953125" />
+        <entry key="app/src/main/res/layout/welcome.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/welcome_container_item.xml" value="0.16296296296296298" />
+        <entry key="app/src/main/res/menu/drawer_navigation.xml" value="0.3098958333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
